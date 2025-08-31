@@ -25,16 +25,22 @@ logísticos fragmentados, o uso de aplicativos possibilita pedidos automáticos,
 com sistemas de pagamento e relatórios em tempo real. 
 Estudos de mercado e análises comparativas demonstram que, com a adoção de 
 tecnologias digitais, restaurantes podem alcançar: 
-• Aumento de até 20% na receita mensal, impulsionado pela maior agilidade 
+- **Aumento** de até 20% na receita mensal, impulsionado pela maior agilidade 
 nos pedidos e fidelização dos clientes. 
-• Redução de até 30% nos custos operacionais, especialmente em mão de obra 
+- **Redução** de até 30% nos custos operacionais, especialmente em mão de obra 
 e logística de atendimento. 
-• Diminuição média de 40% no tempo de espera dos clientes, garantindo maior 
+- **Diminuição** média de 40% no tempo de espera dos clientes, garantindo maior 
 rotatividade de mesas e satisfação. 
-• Elevação de até 25% na satisfação do cliente, devido ao atendimento mais 
+- **Elevação** de até 25% na satisfação do cliente, devido ao atendimento mais 
 rápido, preciso e personalizado. 
+
 Esses dados comprovam que investir em aplicativos para restaurantes não é apenas uma 
 tendência, mas uma estratégia competitiva fundamental. A automação digital reduz 
 falhas humanas, aumenta a eficiência operacional e melhora significativamente o 
 relacionamento com o cliente, gerando benefícios sustentáveis a longo prazo para o 
 setor gastronômico.
+
+**Fontes** 
+- sma.abrasel.com.br
+- Estado de Minas.com
+- Gazeta Mercantil
