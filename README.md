@@ -43,4 +43,4 @@ setor gastronômico.
 **Fontes** 
 - sma.abrasel.com.br
 - Estado de Minas.com
-- Gazeta Mercantil
+- Gazeta Mercantil.
