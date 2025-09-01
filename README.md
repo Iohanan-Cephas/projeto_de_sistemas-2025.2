@@ -45,28 +45,8 @@ Enquanto os modelos tradicionais dependem de anotações manuais, comunicação 
 - Relatórios e métricas em tempo real.  
 ---
 
-## 📊 Benefícios Esperados
-
-De acordo com **estudos de mercado e análises comparativas**, a adoção de tecnologias digitais em restaurantes pode gerar:  
-
-- **Aumento de até 20%** na receita mensal.  
-- **Redução de até 30%** nos custos operacionais.  
-- **Diminuição média de 40%** no tempo de espera dos clientes.  
-- **Elevação de até 25%** na satisfação do cliente.  
-
-Esses números comprovam que investir em aplicativos para restaurantes não é apenas uma **tendência**, mas uma **estratégia competitiva essencial** para o setor gastronômico.  
-
----
-
-## 🔗 Fontes
-
-- [sma.abrasel.com.br](https://sma.abrasel.com.br)  
-- [Estado de Minas](https://www.em.com.br)  
-- [Gazeta Mercantil](https://www.gazetadigital.com.br)  
-
----
 ## Protótipo e Sprints
-**🎨 [Protótipo inicial no Figma](https://www.figma.com/proto/kDv15u1yahVo1VEOCYTnwy/Untitled?node-id=0-1&t=JcpbYVpp2r6ag0Jv-1)**
+**🎨 [Protótipo no Figma](https://www.figma.com/proto/kDv15u1yahVo1VEOCYTnwy/Untitled?node-id=0-1&t=JcpbYVpp2r6ag0Jv-1)**
 
 **📄 [Documentação das sprints e atribuições da equipe](https://github.com/Iohanan-Cephas/projeto_de_sistemas-2025.2/tree/develop)**
 
@@ -80,60 +60,75 @@ Esses números comprovam que investir em aplicativos para restaurantes não é a
 ## 🛠️ Stack Tecnológica
 | Área                 | Tecnologia                |
 |----------------------|---------------------------|
-| Front-end            | Django (Templates)        |
-| Frontend (Mobile)    | Ionic                     |
-| Back-end             | Django                    |
-| Banco de Dados (dev) | SQLite                    |
-| Banco de Dados (prod)| PostgreSQL                |
+| Front/Back-end       | Django                    |
+| Mobile               | Ionic                     |
+| Banco de Dados       | SQLite                    |
 | Versionamento        | GitHub                    |
 
-## 📘 Sobre as Tecnologias
+---
 
-### Django
-Django é um framework web em Python que segue o padrão MVC (Model-View-Controller), oferecendo ferramentas completas para desenvolvimento de aplicações robustas, seguras e escaláveis. Ele será utilizado tanto no backend quanto no frontend web, através do sistema de templates. A escolha se deve à sua rapidez no desenvolvimento, ampla comunidade e facilidade de integração com banco de dados e APIs.
+## 📋 Requisitos Funcionais
 
-### Ionic
-Ionic é um framework para desenvolvimento de aplicativos móveis híbridos, permitindo criar apps para Android e iOS a partir de uma única base de código. Ele se integra facilmente com tecnologias web modernas (Angular, React ou Vue), acelerando o desenvolvimento mobile. A escolha se deve à possibilidade de manter uma base unificada de componentes, reduzindo custos e tempo de implementação para o mobile.
+### 📦 RF-01: Documentação e Infraestrutura Inicial do Projeto
 
-### SQLite
-SQLite é um banco de dados relacional leve, que não requer servidor dedicado. Ele é amplamente utilizado em fase de desenvolvimento por sua simplicidade de configuração e portabilidade. Foi escolhido para o projeto por facilitar os testes locais, permitindo um ciclo de desenvolvimento mais ágil sem a necessidade de infraestrutura complexa.
+**User Story**:
+"Como equipe de desenvolvimento, queremos documentar e estruturar a base inicial do projeto para garantir organização, padronização e suporte para melhor desenvolvimento das próximas funcionalidades."
 
-### PostgreSQL
-PostgreSQL é um dos bancos de dados relacionais mais robustos e confiáveis do mercado, oferecendo suporte a transações complexas, alta performance e segurança. Ele será usado no ambiente de produção, garantindo estabilidade, escalabilidade e integridade dos dados à medida que a aplicação cresce. A escolha se deve à sua maturidade, suporte ativo e capacidade de lidar com grandes volumes de informação.
+**📝 Regras de Negócio**:
 
-### GitHub
-GitHub é uma plataforma de hospedagem de código que utiliza o sistema de versionamento Git. Ele permite organizar o código, acompanhar mudanças, gerenciar equipes e colaborar em tempo real. Foi escolhido por sua praticidade no controle de versões, integração com ferramentas de CI/CD e ampla aceitação no mercado, garantindo maior segurança e rastreabilidade no desenvolvimento.
+- O projeto deve possuir um README claro, descrevendo objetivo, equipe e instruções básicas.
+- Deve existir um repositório no GitHub configurado para versionamento.
+- Estrutura de pastas padronizada para código, documentação e testes.
+- A aplicação deve ser feita em django e ionic.
+- Documentação inicial do projeto.
 
-📦 RF-01: Documentação e Infraestrutura Inicial do Projeto
+### 📦 RF-02: Lógica de Login e Sessão
 
-User Story:
-"Como equipe de desenvolvimento, queremos documentar e estruturar a base inicial do projeto para garantir organização, padronização e suporte ao desenvolvimento das próximas funcionalidades."
-
-📝 Regras de Negócio:
-
-O projeto deve possuir um README claro, descrevendo objetivo, equipe e instruções básicas.
-
-Deve existir um repositório no GitHub configurado para versionamento.
-
-Estrutura de pastas padronizada para código, documentação e testes.
-
-A aplicação deve ser iniciada em Django (backend).
-
-Deve existir ambiente virtual configurado para dependências.
-
-Banco de dados inicial deve estar configurado (SQLite ou PostgreSQL).
-
-📦 RF-02: Lógica de Login e Sessão
-
-User Story:
+**User Story**:
 "Como usuário, quero realizar login e manter minha sessão ativa para acessar funcionalidades personalizadas do sistema."
 
-📝 Regras de Negócio:
+**📝 Regras de Negócio**:
 
-O login deve ser feito com e-mail e senha cadastrados.
+- O login deve ser feito com e-mail e senha cadastrados.
+- Senha deve possuir no mínimo 8 caracteres.
+- Deve ser possível sair (logout) a qualquer momento.
+- Sessão do usuário deve expirar automaticamente após tempo de inatividade (ex.: 30 min).
 
-Senha deve possuir no mínimo 8 caracteres.
+--- 
+**🚀 Como rodar o projeto**
 
-Deve ser possível sair (logout) a qualquer momento.
+O sistema é composto por duas partes:
 
-Sessão do usuário deve expirar automaticamente após tempo de inatividade (ex.: 30 min).
+Backend: API em Django
+
+Frontend: Aplicação web/mobile em Ionic
+
+**🔧 Pré-requisitos**
+
+Python 3.11+
+
+Node.js 18+ / npm ou yarn
+
+▶️ Rodando manualmente
+```bash
+Backend (Django)
+cd backend
+python -m venv .venv
+source .venv/bin/activate  # ou .venv\Scripts\activate no Windows
+
+pip install -r requirements.txt
+cp .env.example .env
+python manage.py migrate
+python manage.py runserver
+
+
+API em: http://localhost:8000
+
+Frontend (Ionic)
+cd frontend
+npm install
+ionic serve
+
+App em: http://localhost:8100
+```
+
