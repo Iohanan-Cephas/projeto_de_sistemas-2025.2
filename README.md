@@ -103,3 +103,37 @@ PostgreSQL é um dos bancos de dados relacionais mais robustos e confiáveis do 
 
 ### GitHub
 GitHub é uma plataforma de hospedagem de código que utiliza o sistema de versionamento Git. Ele permite organizar o código, acompanhar mudanças, gerenciar equipes e colaborar em tempo real. Foi escolhido por sua praticidade no controle de versões, integração com ferramentas de CI/CD e ampla aceitação no mercado, garantindo maior segurança e rastreabilidade no desenvolvimento.
+
+📦 RF-01: Documentação e Infraestrutura Inicial do Projeto
+
+User Story:
+"Como equipe de desenvolvimento, queremos documentar e estruturar a base inicial do projeto para garantir organização, padronização e suporte ao desenvolvimento das próximas funcionalidades."
+
+📝 Regras de Negócio:
+
+O projeto deve possuir um README claro, descrevendo objetivo, equipe e instruções básicas.
+
+Deve existir um repositório no GitHub configurado para versionamento.
+
+Estrutura de pastas padronizada para código, documentação e testes.
+
+A aplicação deve ser iniciada em Django (backend).
+
+Deve existir ambiente virtual configurado para dependências.
+
+Banco de dados inicial deve estar configurado (SQLite ou PostgreSQL).
+
+📦 RF-02: Lógica de Login e Sessão
+
+User Story:
+"Como usuário, quero realizar login e manter minha sessão ativa para acessar funcionalidades personalizadas do sistema."
+
+📝 Regras de Negócio:
+
+O login deve ser feito com e-mail e senha cadastrados.
+
+Senha deve possuir no mínimo 8 caracteres.
+
+Deve ser possível sair (logout) a qualquer momento.
+
+Sessão do usuário deve expirar automaticamente após tempo de inatividade (ex.: 30 min).
