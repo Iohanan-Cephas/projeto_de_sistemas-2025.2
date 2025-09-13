@@ -1,0 +1,61 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .login-container {
+    width: 90%;
+    max-width: 400px; // limita no centro, ótimo para iPhone 16 Pro Max
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .logo-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 80px;
+    margin-bottom: 80px;
+
+    .logo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+    }
+  }
+
+  .form-container {
+    width: 100%;
+
+    ion-item {
+      margin-bottom: 20px;
+      --border-radius: 10px;
+    }
+
+    .options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 15px 0;
+
+      ion-checkbox {
+        margin-right: 5px;
+      }
+
+      .forgot {
+        color: #e74c3c;
+        font-size: 0.9em;
+        cursor: pointer;
+        text-decoration: none;
+      }
+    }
+
+    .login-btn {
+      margin-top: 30px;
+      --border-radius: 12px;
+      font-size: 1.1em;
+      padding: 14px;
+    }
+  }
+}
