@@ -1,0 +1,30 @@
+<ion-content class="login-page" fullscreen>
+  <div class="login-container">
+    <div class="logo-container">
+      <img src="assets/logo.png" alt="Logo" class="logo"/>
+    </div>
+
+    <form (ngSubmit)="login()" class="form-container">
+      <ion-item>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input type="email" [(ngModel)]="email" name="email" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input type="password" [(ngModel)]="password" name="password" required></ion-input>
+        <ion-icon name="eye-outline" slot="end"></ion-icon>
+      </ion-item>
+
+      <div class="options">
+        <ion-checkbox [(ngModel)]="remember" name="remember"></ion-checkbox>
+        <ion-label>Remember Me</ion-label>
+        <a class="forgot" (click)="forgotPassword()">Forgot Password?</a>
+      </div>
+
+      <ion-button href="src/app/home/home.page.html" expand="block" type="submit" shape="round" class="login-btn">
+        Login
+      </ion-button>
+    </form>
+  </div>
+</ion-content>
