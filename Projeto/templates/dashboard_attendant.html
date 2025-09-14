@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel • Atendente</title>
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            neutralInk: '#0A0A0A',
+          },
+          borderRadius: {
+            xl2: '16px'
+          },
+          boxShadow: {
+            card: '0 2px 0 0 rgba(0,0,0,0.25)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .card { border-radius: 16px }
+    .elev { box-shadow: 0 2px 0 0 rgba(0,0,0,.12) }
+    .btn { transition: transform .05s ease }
+    .btn:active { transform: translateY(1px) }
+  </style>
+</head>
+<body class="bg-white text-neutral-800 min-h-screen">
+  <!-- Header simples -->
+  <header class="h-16 flex items-center justify-between px-4 md:px-8 border-b">
+    <div class="flex items-center gap-3">
+      <button class="p-2 rounded-full hover:bg-neutral-100" aria-label="menu">
+        <!-- ícone hamburger -->
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-width="1.5" d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <h1 class="text-lg md:text-xl font-semibold">Painel do Atendente</h1>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="hidden md:flex items-center gap-2 bg-neutral-100 rounded-full px-3 py-2">
+        <svg class="w-4 h-4 text-neutral-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-width="1.5" d="M21 21l-4.35-4.35M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/></svg>
+        <input placeholder="Buscar #id / mesa..." class="bg-transparent outline-none text-sm">
+      </div>
+      <div class="w-9 h-9 rounded-full bg-neutral-900 text-white flex items-center justify-center text-xs">AT</div>
+    </div>
+  </header>
+
+  <!-- Filtros superiores -->
+  <section class="px-4 md:px-8 py-4 border-b">
+    <div class="flex flex-wrap gap-2 items-center">
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-900 text-white text-sm">Todos</button>
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Criados</button>
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Em preparo</button>
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Prontos</button>
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Entregues</button>
+
+      <div class="ms-auto flex md:hidden items-center gap-2 bg-neutral-100 rounded-full px-3 py-1.5">
+        <svg class="w-4 h-4 text-neutral-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-width="1.5" d="M21 21l-4.35-4.35M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/></svg>
+        <input placeholder="Buscar..." class="bg-transparent outline-none text-sm w-32">
+      </div>
+    </div>
+  </section>
+
+  <!-- Colunas (kanban leve) -->
+  <main class="px-4 md:px-8 py-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6">
+
+      <!-- Coluna: Criados -->
+      <section class="space-y-3">
+        <header class="flex items-center justify-between">
+          <h2 class="text-base font-semibold">Criados</h2>
+          <span class="text-xs text-neutral-500">2</span>
+        </header>
+
+        <!-- Card de pedido -->
+        <article class="card border border-neutral-200 p-4 elev bg-white">
+          <div class="flex items-center justify-between">
+            <span class="font-medium">#1015 • Mesa 08</span>
+            <span class="text-xs text-neutral-500">2 min</span>
+          </div>
+          <p class="text-sm text-neutral-600 mt-1">2 itens • R$ 36,00</p>
+          <div class="mt-3 flex gap-2">
+            <button class="btn px-3 py-2 rounded-lg bg-neutral-900 text-white text-xs">Enviar p/ preparo</button>
+            <button class="btn px-3 py-2 rounded-lg bg-neutral-100 text-xs">Detalhes</button>
+          </div>
+        </article>
+
+        <article class="card border border-neutral-200 p-4 elev bg-white">
+          <div class="flex items-center justify-between">
+            <span class="font-medium">#1016 • Mesa 05</span>
+            <span class="text-xs text-neutral-500">agora</span>
+          </div>
+          <p class="text-sm text-neutral-600 mt-1">1 item • R$ 18,00</p>
+          <div class="mt-3 flex gap-2">
+            <button class="btn px-3 py-2 rounded-lg bg-neutral-900 text-white text-xs">Enviar p/ preparo</button>
+            <button class="btn px-3 py-2 rounded-lg bg-neutral-100 text-xs">Detalhes</button>
+          </div>
+        </article>
+      </section>
+
+      <!-- Coluna: Em preparo -->
+      <section class="space-y-3">
+        <header class="flex items-center justify-between">
+          <h2 class="text-base font-semibold">Em preparo</h2>
+          <span class="text-xs text-neutral-500">1</span>
+        </header>
+
+        <article class="card border border-neutral-200 p-4 elev bg-white">
+          <div class="flex items-center justify-between">
+            <span class="font-medium">#1012 • Mesa 12</span>
+            <span class="text-xs text-neutral-500">12 min</span>
+          </div>
+          <p class="text-sm text-neutral-600 mt-1">3 itens • R$ 78,90</p>
+          <div class="mt-3 flex gap-2">
+            <button class="btn px-3 py-2 rounded-lg bg-black text-white text-xs">Marcar como pronto</button>
+            <button class="btn px-3 py-2 rounded-lg bg-neutral-100 text-xs">Detalhes</button>
+          </div>
+        </article>
+      </section>
+
+      <!-- Coluna: Prontos -->
+      <section class="space-y-3">
+        <header class="flex items-center justify-between">
+          <h2 class="text-base font-semibold">Prontos</h2>
+          <span class="text-xs text-neutral-500">1</span>
+        </header>
+
+        <article class="card border border-neutral-200 p-4 elev bg-white">
+          <div class="flex items-center justify-between">
+            <span class="font-medium">#1010 • Mesa 02</span>
+            <span class="text-xs text-neutral-500">3 min</span>
+          </div>
+          <p class="text-sm text-neutral-600 mt-1">1 item • R$ 18,00</p>
+          <div class="mt-3 flex gap-2">
+            <button class="btn px-3 py-2 rounded-lg bg-neutral-900 text-white text-xs">Entregar</button>
+            <button class="btn px-3 py-2 rounded-lg bg-neutral-100 text-xs">Detalhes</button>
+          </div>
+        </article>
+      </section>
+
+      <!-- Coluna: Entregues -->
+      <section class="space-y-3">
+        <header class="flex items-center justify-between">
+          <h2 class="text-base font-semibold">Entregues</h2>
+          <span class="text-xs text-neutral-500">3</span>
+        </header>
+
+        <article class="card border border-neutral-200 p-4 bg-white">
+          <div class="flex items-center justify-between">
+            <span class="font-medium">#1007 • Mesa 03</span>
+            <span class="text-xs text-neutral-500">há 25 min</span>
+          </div>
+          <p class="text-sm text-neutral-600 mt-1">2 itens • R$ 41,50</p>
+          <div class="mt-3 flex gap-2">
+            <button class="btn px-3 py-2 rounded-lg bg-neutral-100 text-xs">Recibo</button>
+            <button class="btn px-3 py-2 rounded-lg bg-neutral-100 text-xs">Detalhes</button>
+          </div>
+        </article>
+      </section>
+
+    </div>
+  </main>
+</body>
+</html>
