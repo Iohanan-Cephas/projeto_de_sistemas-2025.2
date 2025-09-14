@@ -1,0 +1,12 @@
+<h1>Adicionar pedido - Mesa {{ mesa.numero }}</h1>
+<form method="post">
+  {% csrf_token %}
+  {% for item in itens %}
+    <div>
+      {{ item.nome }} - R$ {{ item.preco }} 
+      <input type="number" name="item_{{ item.id }}" value="0" min="0">
+    </div>
+  {% endfor %}
+  <button type="submit">Adicionar Pedido</button>
+</form>
+<a href="{% url 'detalhe_mesa' mesa.id %}">Voltar</a>
