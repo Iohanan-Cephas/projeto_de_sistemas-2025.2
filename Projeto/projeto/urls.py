@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from accounts.views import dashboard, login_view, logout_view
+from accounts.views import dashboard, login_view, logout_view, LoginAPI
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -8,4 +8,5 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('', dashboard, name='dashboard'),
     path('SelfService/', include('SelfService.urls')),
+    path('api-auth/', LoginAPI.as_view()),
 ]

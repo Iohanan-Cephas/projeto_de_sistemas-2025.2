@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'SelfService.apps.SelfserviceConfig',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 
