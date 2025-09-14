@@ -26,5 +26,20 @@ def logout_view(request):
 @login_required
 def dashboard(request):
     # página branca mostrando o tipo de login
-    role = request.session.get('role', 'ATENDENTE')  # fallback
-    return render(request, 'accounts/dashboard.html', {'role': role})
+    #role = request.session.get('role', 'ATENDENTE')   fallback 
+    #return render(request, 'accounts/dashboard.html', {'role': role})  
+     
+    role = request.session.get('role', 'ATENDENTE')
+
+    if role == 'GERENTE':
+        return dashboard_manager(request)
+    else:
+        return dashboard_attendant(request) 
+
+@login_required
+def dashboard_attendant(request):
+    return render(request, 'accounts/dashboard_attendant.html')
+
+@login_required
+def dashboard_manager(request):
+    return render(request, 'accounts/dashboard_manager.html')
