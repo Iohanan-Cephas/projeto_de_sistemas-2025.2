@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts.apps.AccountsConfig',
     'SelfService.apps.SelfserviceConfig',
     'rest_framework',
     'rest_framework.authtoken',
@@ -64,7 +63,7 @@ ROOT_URLCONF = 'projeto.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'SelfService/templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

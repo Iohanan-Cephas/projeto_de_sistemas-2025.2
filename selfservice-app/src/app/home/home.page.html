@@ -15,45 +15,27 @@
     </ion-buttons>
   </ion-toolbar>
 
-  <ion-segment [(ngModel)]="segment" value="ocupadas" class="segment-custom">
-    <ion-segment-button value="ocupadas">
-      Ocupadas
+  <ion-segment [(ngModel)]="segment" value="Types" class="segment-custom">
+    <ion-segment-button value="qrCode">
+      Ler QR CODE da mesa
     </ion-segment-button>
-    <ion-segment-button value="disponiveis">
-      Disponíveis
+    <ion-segment-button value="reservas">
+      Fazer Reserva de mesa
     </ion-segment-button>
   </ion-segment>
 </ion-header>
-
+ 
 <ion-content class="home-content" fullscreen>
-  <div *ngIf="segment === 'ocupadas'" class="alert-container">
+  <div *ngIf="segment === 'qrCode'" class="alert-container">
     <ion-icon name="alert-circle-outline" class="alert-icon"></ion-icon>
     <h2>Atenção!</h2>
-    <p>Não há mesa ocupada.</p>
+    <p>Clique no botao para ler o qr code</p>
   </div>
 
-  <div *ngIf="segment === 'disponiveis'" class="alert-container">
+  <div *ngIf="segment === 'reservas'" class="alert-container">
     <ion-icon name="checkmark-circle-outline" class="alert-icon"></ion-icon>
     <h2>Disponível</h2>
-    <p>Há mesas disponíveis.</p>
+    <p>escolha sua mesa</p>
   </div>
 </ion-content>
 
-<ion-fab class="fab" slot="fixed" horizontal="end" vertical="bottom">
-  <ion-fab-button>
-    <ion-icon name="add"></ion-icon>
-  </ion-fab-button>
-   <!-- Só seta para cima -->
-  <ion-fab-list side="top">
-    <ion-fab-button>
-      <ion-icon name="chevron-up"></ion-icon>
-    </ion-fab-button>
-  </ion-fab-list>
-
-  <!-- Só seta para esquerda -->
-  <ion-fab-list side="start">
-    <ion-fab-button>
-      <ion-icon name="chevron-back"></ion-icon>
-    </ion-fab-button>
-  </ion-fab-list>
-</ion-fab>
