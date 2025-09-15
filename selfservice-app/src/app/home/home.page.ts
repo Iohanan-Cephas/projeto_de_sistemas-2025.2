@@ -49,9 +49,6 @@ import {
     IonSegment,
     IonSegmentButton,
     IonContent,
-    IonFab,
-    IonFabButton,
-    IonFabList
   ],
 })
 export class HomePage {
