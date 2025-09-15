@@ -15,10 +15,10 @@ class DashboardView(View):
 @method_decorator(login_required, name='dispatch')
 class DashboardAttendantView(View):
     def get(self, request):
-        return render(request, 'login/dashboard_attendant.html')
+        return render(request, 'login/DashboardAtendente.html')
 
 
 @method_decorator(login_required, name='dispatch')
 class DashboardManagerView(View):
     def get(self, request):
-        return render(request, 'login/dashboard_manager.html')
+        return render(request, 'login/DashboardGerente.html')

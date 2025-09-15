@@ -1,0 +1,117 @@
+{% extends "Base.html" %}
+
+{% block title %}Painel • Gerente{% endblock %}
+{% block header_title %}Painel do Gerente{% endblock %}
+{% block profile_icon %}GR{% endblock %}
+
+{% block content %}
+
+  <!-- Filtros rápidos -->
+  <section class="px-4 md:px-8 py-4 border-b">
+    <div class="flex flex-wrap items-center gap-2">
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-900 text-white text-sm">Dia de Hoje</button>
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Funcionários</button>
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Histórico</button>
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Faturamento</button>
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Mesas</button>
+    </div>
+  </section>
+
+  <main class="px-4 md:px-8 py-6 space-y-6">
+
+    <!-- KPIs -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div class="card border border-neutral-200 bg-white p-5 elev">
+        <p class="text-sm text-neutral-500">Faturamento (hoje)</p>
+        <p class="text-2xl font-semibold mt-1">R$ 2.870,00</p>
+        <p class="text-xs text-emerald-600 mt-1">+12% vs ontem</p>
+      </div>
+      <div class="card border border-neutral-200 bg-white p-5 elev">
+        <p class="text-sm text-neutral-500">Pedidos de hoje</p>
+        <p class="text-2xl font-semibold mt-1">138</p>
+        <p class="text-xs text-emerald-600 mt-1">+6% semanal</p>
+      </div>
+      <div class="card border border-neutral-200 bg-white p-5 elev">
+        <p class="text-sm text-neutral-500">Todas as Mesas</p>
+        <p class="text-2xl font-semibold mt-1">24</p>
+      </div>
+      <div class="card border border-neutral-200 bg-white p-5 elev">
+        <p class="text-sm text-neutral-500">Mesas Ocupadas</p>
+        <p class="text-2xl font-semibold mt-1">15</p>
+      </div>
+    </section>
+
+    <!-- Gráfico + Cardápio -->
+    <section class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div class="card border border-neutral-200 bg-white p-5 elev xl:col-span-2">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-semibold">Fluxo de clientes</h2>
+          <select class="text-sm border rounded-full px-2 py-1.5">
+            <option>7 dias</option>
+            <option>30 dias</option>
+            <option>90 dias</option>
+          </select>
+        </div>
+        <div class="h-64 bg-neutral-100 rounded-xl flex items-center justify-center text-neutral-500">
+          Gráfico (placeholder)
+        </div>
+      </div>
+
+      <div class="card border border-neutral-200 bg-white p-5 elev">
+        <h2 class="font-semibold mb-3">Cardápio</h2>
+        <ul class="space-y-3">
+          <li>Hambúrguer da Casa</li>
+          <li>Suco de Laranja</li>
+          <li>Batata Rústica</li>
+          <li>Bruschetta</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Pedidos recentes -->
+    <section class="card border border-neutral-200 bg-white p-5 elev">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-semibold">Histórico de Pedidos</h2>
+        <div class="flex gap-2">
+          <select class="text-sm border rounded-full px-2 py-1.5">
+            <option>Status: todos</option>
+            <option>Criado</option>
+            <option>Em preparo</option>
+            <option>Pronto</option>
+            <option>Entregue</option>
+            <option>Cancelado</option>
+          </select>
+          <input class="text-sm border rounded-full px-3 py-1.5" placeholder="Buscar...">
+        </div>
+      </div>
+
+      <div class="overflow-auto">
+        <table class="min-w-full text-sm">
+          <thead class="text-left text-neutral-500">
+            <tr>
+              <th class="py-2 pr-4">#</th>
+              <th class="py-2 pr-4">Mesa</th>
+              <th class="py-2 pr-4">Cliente</th>
+              <th class="py-2 pr-4">Itens</th>
+              <th class="py-2 pr-4">Total</th>
+              <th class="py-2 pr-4">Atendente</th>
+              <th class="py-2">Criado</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y">
+            <tr>
+              <td class="py-2 pr-4 font-medium">#1012</td>
+              <td class="py-2 pr-4">MESA-12</td>
+              <td class="py-2 pr-4">Lucas</td>
+              <td class="py-2 pr-4">3</td>
+              <td class="py-2 pr-4">R$ 78,90</td>
+              <td class="py-2">Atendente 1</td>
+              <td class="py-2">18:24</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+{% endblock %}
