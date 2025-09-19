@@ -6,112 +6,153 @@
 
 {% block content %}
 
-  <!-- Filtros rápidos -->
-  <section class="px-4 md:px-8 py-4 border-b">
-    <div class="flex flex-wrap items-center gap-2">
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-900 text-white text-sm">Dia de Hoje</button>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Funcionários</button>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Histórico</button>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Faturamento</button>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Mesas</button>
+<!-- Tabs -->
+<section class="mb-4">
+  <div class="flex gap-2 border-b">
+    <a href="?tab=today"
+       class="px-4 py-2 -mb-px border-b-2 {% if tab == 'today' %}border-neutral-900 font-semibold{% else %}border-transparent text-neutral-500{% endif %}">
+      Dia de hoje
+    </a>
+    <a href="?tab=mesas"
+       class="px-4 py-2 -mb-px border-b-2 {% if tab == 'mesas' %}border-neutral-900 font-semibold{% else %}border-transparent text-neutral-500{% endif %}">
+      Todas as mesas
+    </a>
+  </div>
+</section>
+
+{% if messages %}
+  <div class="mb-4 space-y-2">
+    {% for message in messages %}
+      <div class="px-3 py-2 rounded-md {% if message.tags == 'success' %}bg-green-100 text-green-900{% else %}bg-red-100 text-red-900{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- ABA: DIA DE HOJE -->
+{% if tab == 'today' %}
+  <section class="space-y-6">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="p-4 rounded-xl border">
+        <p class="text-sm text-neutral-500">Data</p>
+        <p class="text-2xl font-semibold">{{ hoje|date:"d/m/Y" }}</p>
+      </div>
+      <div class="p-4 rounded-xl border">
+        <p class="text-sm text-neutral-500">Pedidos no dia</p>
+        <p class="text-2xl font-semibold">{{ total_pedidos }}</p>
+      </div>
+      <div class="p-4 rounded-xl border">
+        <p class="text-sm text-neutral-500">Total concluído/faturado</p>
+        <p class="text-2xl font-semibold">R$ {{ total_faturado|floatformat:2 }}</p>
+      </div>
+    </div>
+
+    <div class="rounded-xl border overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-neutral-50 text-neutral-600">
+          <tr>
+            <th class="text-left px-4 py-3">#Pedido</th>
+            <th class="text-left px-4 py-3">Mesa</th>
+            <th class="text-left px-4 py-3">Status</th>
+            <th class="text-left px-4 py-3">Total</th>
+            <th class="text-left px-4 py-3">Horário</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in pedidos_hoje %}
+          <tr class="border-t">
+            <td class="px-4 py-2">#{{ p.id }}</td>
+            <td class="px-4 py-2">Mesa {{ p.mesa.numero }}</td>
+            <td class="px-4 py-2">
+              {% if p.status == 'P' %}Pendente{% elif p.status == 'E' %}Em preparo{% elif p.status == 'C' %}Concluído{% else %}Faturado{% endif %}
+            </td>
+            <td class="px-4 py-2">R$ {{ p.total|default_if_none:0|floatformat:2 }}</td>
+            <td class="px-4 py-2">{{ p.criado_em|date:"H:i" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5" class="px-4 py-4 text-neutral-500">Sem pedidos hoje.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </section>
+{% endif %}
 
-  <main class="px-4 md:px-8 py-6 space-y-6">
+<!-- ABA: TODAS AS MESAS -->
+{% if tab == 'mesas' %}
+  <section class="space-y-6">
+    <!-- Ações rápidas -->
+    <div class="flex items-center justify-between">
+      <h2 class="text-lg font-semibold">Mesas cadastradas</h2>
+      <form method="post" class="flex items-center gap-2">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="add_mesa"/>
+        <input required type="number" name="numero" min="1" placeholder="Nº"
+               class="w-24 px-3 py-2 border rounded-lg outline-none" />
+        <input required type="number" name="capacidade" min="1" placeholder="Capacidade"
+               class="w-32 px-3 py-2 border rounded-lg outline-none" />
+        <button class="px-4 py-2 rounded-lg bg-neutral-900 text-white text-sm">Adicionar mesa</button>
+      </form>
+    </div>
 
-    <!-- KPIs -->
-    <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-      <div class="card border border-neutral-200 bg-white p-5 elev">
-        <p class="text-sm text-neutral-500">Faturamento (hoje)</p>
-        <p class="text-2xl font-semibold mt-1">R$ 2.870,00</p>
-        <p class="text-xs text-emerald-600 mt-1">+12% vs ontem</p>
-      </div>
-      <div class="card border border-neutral-200 bg-white p-5 elev">
-        <p class="text-sm text-neutral-500">Pedidos de hoje</p>
-        <p class="text-2xl font-semibold mt-1">138</p>
-        <p class="text-xs text-emerald-600 mt-1">+6% semanal</p>
-      </div>
-      <div class="card border border-neutral-200 bg-white p-5 elev">
-        <p class="text-sm text-neutral-500">Todas as Mesas</p>
-        <p class="text-2xl font-semibold mt-1">24</p>
-      </div>
-      <div class="card border border-neutral-200 bg-white p-5 elev">
-        <p class="text-sm text-neutral-500">Mesas Ocupadas</p>
-        <p class="text-2xl font-semibold mt-1">15</p>
-      </div>
-    </section>
-
-    <!-- Gráfico + Cardápio -->
-    <section class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-      <div class="card border border-neutral-200 bg-white p-5 elev xl:col-span-2">
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="font-semibold">Fluxo de clientes</h2>
-          <select class="text-sm border rounded-full px-2 py-1.5">
-            <option>7 dias</option>
-            <option>30 dias</option>
-            <option>90 dias</option>
-          </select>
+    <!-- Grade de mesas -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {% for m in mesas %}
+      <div class="p-4 rounded-xl border flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-xs text-neutral-500">Mesa</p>
+            <p class="text-xl font-semibold">{{ m.numero }}</p>
+          </div>
+          <span class="px-2 py-1 text-xs rounded-full
+            {% if m.ocupada %}bg-amber-100 text-amber-900{% else %}bg-green-100 text-green-900{% endif %}">
+            {% if m.ocupada %}Ocupada{% else %}Livre{% endif %}
+          </span>
         </div>
-        <div class="h-64 bg-neutral-100 rounded-xl flex items-center justify-center text-neutral-500">
-          Gráfico (placeholder)
+
+        <p class="text-sm text-neutral-600">Capacidade: {{ m.capacidade }} pessoas</p>
+
+        <div class="flex items-center gap-2">
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="toggle_mesa"/>
+            <input type="hidden" name="mesa_id" value="{{ m.id }}"/>
+            <button class="px-3 py-2 rounded-lg border text-sm">
+              Alternar estado
+            </button>
+          </form>
+
+          <a href="{% url 'detalhe_mesa' m.id %}"
+             class="px-3 py-2 rounded-lg border text-sm">
+            Ver pedidos
+          </a>
         </div>
-      </div>
 
-      <div class="card border border-neutral-200 bg-white p-5 elev">
-        <h2 class="font-semibold mb-3">Cardápio</h2>
-        <ul class="space-y-3">
-          <li>Hambúrguer da Casa</li>
-          <li>Suco de Laranja</li>
-          <li>Batata Rústica</li>
-          <li>Bruschetta</li>
-        </ul>
+        <!-- Pedidos recentes da mesa (top 3) -->
+        {% with recent=m.pedidos.all|dictsortreversed:"criado_em"|slice:":3" %}
+          {% if recent %}
+            <div class="mt-2 border-t pt-2">
+              <p class="text-xs text-neutral-500 mb-1">Pedidos recentes</p>
+              <ul class="space-y-1 text-sm">
+                {% for p in recent %}
+                  <li class="flex items-center justify-between">
+                    <span>#{{ p.id }} •
+                      {% if p.status == 'P' %}Pendente{% elif p.status == 'E' %}Em preparo{% elif p.status == 'C' %}Concluído{% else %}Faturado{% endif %}
+                    </span>
+                    <span>R$ {{ p.total|default_if_none:0|floatformat:2 }}</span>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        {% endwith %}
       </div>
-    </section>
+      {% empty %}
+      <p class="text-neutral-500">Nenhuma mesa cadastrada.</p>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
 
-    <!-- Pedidos recentes -->
-    <section class="card border border-neutral-200 bg-white p-5 elev">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="font-semibold">Histórico de Pedidos</h2>
-        <div class="flex gap-2">
-          <select class="text-sm border rounded-full px-2 py-1.5">
-            <option>Status: todos</option>
-            <option>Criado</option>
-            <option>Em preparo</option>
-            <option>Pronto</option>
-            <option>Entregue</option>
-            <option>Cancelado</option>
-          </select>
-          <input class="text-sm border rounded-full px-3 py-1.5" placeholder="Buscar...">
-        </div>
-      </div>
-
-      <div class="overflow-auto">
-        <table class="min-w-full text-sm">
-          <thead class="text-left text-neutral-500">
-            <tr>
-              <th class="py-2 pr-4">#</th>
-              <th class="py-2 pr-4">Mesa</th>
-              <th class="py-2 pr-4">Cliente</th>
-              <th class="py-2 pr-4">Itens</th>
-              <th class="py-2 pr-4">Total</th>
-              <th class="py-2 pr-4">Atendente</th>
-              <th class="py-2">Criado</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y">
-            <tr>
-              <td class="py-2 pr-4 font-medium">#1012</td>
-              <td class="py-2 pr-4">MESA-12</td>
-              <td class="py-2 pr-4">Lucas</td>
-              <td class="py-2 pr-4">3</td>
-              <td class="py-2 pr-4">R$ 78,90</td>
-              <td class="py-2">Atendente 1</td>
-              <td class="py-2">18:24</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-  </main>
 {% endblock %}
