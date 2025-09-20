@@ -1,0 +1,51 @@
+{% extends "Base.html" %}
+{% block title %}Meu perfil{% endblock %}
+{% block header_title %}Meu perfil{% endblock %}
+
+{% block content %}
+<section class="max-w-3xl mx-auto px-4 py-6">
+  <div class="border rounded-xl p-4">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <div class="text-xs text-neutral-500">Usuário</div>
+        <div class="font-medium">{{ user_info.username }}</div>
+      </div>
+      <div>
+        <div class="text-xs text-neutral-500">Papel</div>
+        <div class="font-medium">
+          {{ user_info.role }}
+        </div>
+      </div>
+
+      <div>
+        <div class="text-xs text-neutral-500">Nome</div>
+        <div class="font-medium">{{ user_info.first_name|default:"—" }}</div>
+      </div>
+      <div>
+        <div class="text-xs text-neutral-500">Sobrenome</div>
+        <div class="font-medium">{{ user_info.last_name|default:"—" }}</div>
+      </div>
+
+      <div class="md:col-span-2">
+        <div class="text-xs text-neutral-500">E-mail</div>
+        <div class="font-medium">{{ user_info.email|default:"—" }}</div>
+      </div>
+
+      <div>
+        <div class="text-xs text-neutral-500">Criado em</div>
+        <div class="font-medium">{{ user_info.date_joined }}</div>
+      </div>
+      <div>
+        <div class="text-xs text-neutral-500">Último acesso</div>
+        <div class="font-medium">{{ user_info.last_login|default:"—" }}</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="flex justify-end mt-4">
+    <a href="{% url 'dashboard' %}" class="px-3 py-2 rounded-lg border">Voltar</a>
+  </div>
+</section>
+{% endblock %}

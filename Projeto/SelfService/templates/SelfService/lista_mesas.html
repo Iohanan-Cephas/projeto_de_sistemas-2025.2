@@ -1,0 +1,30 @@
+{% extends "Base.html" %}
+{% block title %}Mesas{% endblock %}
+{% block header_title %}Mesas{% endblock %}
+
+{% block content %}
+<section class="max-w-6xl mx-auto px-4 py-6">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold">Mesas cadastradas</h2>
+    <a class="text-sm underline" href="{% url 'pedidos_por_mesa' %}">Ver pedidos por mesa</a>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for mesa in mesas %}
+      <a href="{% url 'detalhe_mesa' mesa.id %}" class="p-4 border rounded-xl hover:bg-neutral-50">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-semibold">Mesa {{ mesa.numero }}</div>
+            <div class="text-sm text-neutral-500">Capacidade: {{ mesa.capacidade }}</div>
+          </div>
+          {% if mesa.ocupada %}
+            <span class="text-xs px-2 py-0.5 rounded-full bg-yellow-100">ocupada</span>
+          {% endif %}
+        </div>
+      </a>
+    {% empty %}
+      <p class="text-neutral-500">Nenhuma mesa cadastrada.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

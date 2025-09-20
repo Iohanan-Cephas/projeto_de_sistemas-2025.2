@@ -1,0 +1,16 @@
+
+{% extends "Base.html" %}
+{% block title %}Excluir • {{ object }}{% endblock %}
+{% block header_title %}Excluir item{% endblock %}
+{% block content %}
+<section class="max-w-xl mx-auto px-4 py-6">
+  <div class="border rounded-xl p-4 space-y-4">
+    <p>Tem certeza que deseja excluir <strong>{{ object }}</strong>?</p>
+    <form method="post" class="flex justify-end gap-2">
+      {% csrf_token %}
+      <a href="{% url 'cardapio_list' %}" class="px-3 py-2 rounded-lg border">Cancelar</a>
+      <button class="px-3 py-2 rounded-lg bg-red-600 text-white">Excluir</button>
+    </form>
+  </div>
+</section>
+{% endblock %}
