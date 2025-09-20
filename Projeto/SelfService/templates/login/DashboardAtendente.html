@@ -5,20 +5,23 @@
 {% block profile_icon %}AT{% endblock %}
 
 {% block content %}
-  <div class="flex justify-end pr-4 pt-3"><a href="{% url 'pedidos_por_mesa' %}" class="text-sm underline">Ver pedidos por mesa</a></div>
+  <div class="flex justify-end pr-4 pt-3">
+    <a href="{% url 'pedidos_por_mesa' %}" class="text-sm underline">Ver pedidos por mesa</a>
+  </div>
+
   <!-- Filtros -->
   <section class="px-4 md:px-8 py-4 border-b">
     <div class="flex flex-wrap gap-2 items-center">
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-900 text-white text-sm">Todas as mesas</button>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Ocupadas</button>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Reservadas</button>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Pedidos</button>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Reservar</button>
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-900 text-white text-sm filter-btn" data-filter="all">Todas as mesas</button>
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm filter-btn" data-filter="ocupada">Ocupadas</button>
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm filter-btn" data-filter="reservada">Reservadas</button>
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm filter-btn" data-filter="pedido">Pedidos</button>
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm filter-btn" data-filter="reservar">Reservar</button>
     </div>
   </section>
 
   <!-- Kanban simples -->
-  <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+  <div id="kanban" class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
 
     <!-- Criados -->
     <section class="space-y-3">
@@ -27,10 +30,9 @@
         <span class="text-xs text-neutral-500">2</span>
       </header>
 
-      <!-- Card -->
-      <article class="card border border-neutral-200 p-4 elev bg-white">
+      <article class="card border border-neutral-200 p-4 elev bg-white filtro pedido">
         <div class="flex items-center justify-between">
-          <span class="font-medium">#1015 • Mesa 08</span>
+          <span class="font-medium">Mesa 01</span>
           <span class="text-xs text-neutral-500">2 min</span>
         </div>
         <p class="text-sm text-neutral-600 mt-1">2 itens • R$ 36,00</p>
@@ -47,9 +49,9 @@
         <span class="text-xs text-neutral-500">3</span>
       </header>
 
-      <article class="card border border-neutral-200 p-4 bg-white">
+      <article class="card border border-neutral-200 p-4 bg-white filtro reservada">
         <div class="flex items-center justify-between">
-          <span class="font-medium">#1007 • Mesa 03</span>
+          <span class="font-medium"> Mesa 02</span>
           <span class="text-xs text-neutral-500">há 25 min</span>
         </div>
         <p class="text-sm text-neutral-600 mt-1">2 itens • R$ 41,50</p>
@@ -66,7 +68,7 @@
         <span class="text-xs text-neutral-500">3</span>
       </header>
 
-      <article class="card border border-neutral-200 p-4 bg-white">
+      <article class="card border border-neutral-200 p-4 bg-white filtro ocupada">
         <div class="flex items-center justify-between">
           <span class="font-medium">Mesa 03</span>
         </div>
@@ -78,42 +80,57 @@
     </section>
   </div>
 
-  <!-- Histórico -->
-  <section class="card border border-neutral-200 bg-white p-5 elev mt-8">
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="font-semibold">Histórico de Pedidos</h2>
-      <div class="flex gap-2">
-        <select class="text-sm border rounded-full px-2 py-1.5">
-          <option>Status: todos</option>
-          <option>Criado</option>
-          <option>Pronto</option>
-          <option>Entregue</option>
-        </select>
-        <input class="text-sm border rounded-full px-3 py-1.5" placeholder="Buscar...">
-      </div>
-    </div>
+  <!-- JS -->
 
-    <div class="overflow-auto">
-      <table class="min-w-full text-sm">
-        <thead class="text-left text-neutral-500">
-          <tr>
-            <th class="py-2 pr-4">#</th>
-            <th class="py-2 pr-4">Mesa</th>
-            <th class="py-2 pr-4">Itens</th>
-            <th class="py-2 pr-4">Total</th>
-            <th class="py-2">Atendente</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y">
-          <tr>
-            <td class="py-2 pr-4 font-medium">#1012</td>
-            <td class="py-2 pr-4">MESA-12</td>
-            <td class="py-2 pr-4">3</td>
-            <td class="py-2 pr-4">R$ 78,90</td>
-            <td class="py-2">Atendente 1</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const sections = document.querySelectorAll('#kanban > section');
+
+  function applyFilter(filter) {
+    sections.forEach(section => {
+      const cards = Array.from(section.querySelectorAll('.filtro'));
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const matches = (filter === 'all') || card.classList.contains(filter);
+        if (matches) {
+          card.classList.remove('hidden'); // Tailwind hidden = display:none
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      // se não tiver cards visíveis, esconda a coluna inteira
+      if (visibleCount === 0) {
+        section.classList.add('hidden');
+      } else {
+        section.classList.remove('hidden');
+      }
+
+      // atualiza contador no header (opcional)
+      const countSpan = section.querySelector('header span.text-xs');
+      if (countSpan) countSpan.textContent = visibleCount;
+    });
+  }
+
+  // comportamento dos botões
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => {
+        b.classList.remove('bg-neutral-900', 'text-white');
+        b.classList.add('bg-neutral-100');
+      });
+      btn.classList.remove('bg-neutral-100');
+      btn.classList.add('bg-neutral-900', 'text-white');
+
+      applyFilter(btn.dataset.filter);
+    });
+  });
+
+  // inicializa
+  applyFilter('all');
+});
+</script>
 {% endblock %}
