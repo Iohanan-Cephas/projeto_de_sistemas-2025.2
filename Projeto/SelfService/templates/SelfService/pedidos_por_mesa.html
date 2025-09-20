@@ -1,0 +1,38 @@
+
+{% extends "Base.html" %}
+{% block title %}Pedidos por mesa{% endblock %}
+{% block header_title %}Pedidos por mesa{% endblock %}
+{% block content %}
+<section class="max-w-6xl mx-auto px-4 py-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for mp in mesas_pedidos %}
+    <div class="border rounded-xl p-4">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="font-semibold">Mesa {{ mp.mesa.numero }}</h3>
+        {% if mp.mesa.ocupada %}<span class="text-xs px-2 py-0.5 rounded-full bg-yellow-100">ocupada</span>{% endif %}
+      </div>
+      {% if mp.pedidos %}
+        <ul class="space-y-2">
+          {% for p in mp.pedidos %}
+          <li class="p-2 rounded border">
+            <div class="flex items-center justify-between">
+              <span class="text-sm">Pedido #{{ p.id }}</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-neutral-100">{{ p.get_status_display }}</span>
+            </div>
+            <div class="text-xs text-neutral-500">Criado em {{ p.criado_em }}</div>
+            <ul class="mt-2 text-sm list-disc ml-5">
+              {% for ip in p.itens_pedido.all %}
+                <li>{{ ip.quantidade }}× {{ ip.item.nome }} — R$ {{ ip.item.preco }}</li>
+              {% endfor %}
+            </ul>
+          </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-neutral-500 text-sm">Sem pedidos.</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

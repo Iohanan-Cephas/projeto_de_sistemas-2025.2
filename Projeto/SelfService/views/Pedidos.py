@@ -16,3 +16,13 @@ class AdicionarPedidoView(View):
                 item = ItemCardapio.objects.get(id=int(item_id.split('_')[1]))
                 ItemPedido.objects.create(pedido=pedido, item=item, quantidade=int(quantidade))
         return redirect('detalhe_mesa', mesa_id=mesa.id)
+
+
+class PedidosPorMesaView(View):
+    def get(self, request):
+        mesas = Mesa.objects.all().order_by('numero')
+        dados = []
+        for m in mesas:
+            pedidos = m.pedidos.order_by('-criado_em').all()
+            dados.append({'mesa': m, 'pedidos': pedidos})
+        return render(request, 'SelfService/pedidos_por_mesa.html', {'mesas_pedidos': dados})

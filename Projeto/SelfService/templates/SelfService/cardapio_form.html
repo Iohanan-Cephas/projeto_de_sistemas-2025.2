@@ -1,0 +1,28 @@
+
+{% extends "Base.html" %}
+{% load form_extras %}
+{% block title %}{{ view.object|default_if_none:'Novo item' }} • Cardápio{% endblock %}
+{% block header_title %}{{ view.object|default_if_none:'Novo item' }}{% endblock %}
+{% block content %}
+<section class="max-w-xl mx-auto px-4 py-6">
+  <form method="post" class="space-y-4 border rounded-xl p-4">
+    {% csrf_token %}
+    <label class="block">
+      <span class="text-sm">Nome</span>
+      {{ form.nome|add_class:"w-full mt-1 px-3 py-2 border rounded-lg" }}
+    </label>
+    <label class="block">
+      <span class="text-sm">Descrição</span>
+      {{ form.descricao|add_class:"w-full mt-1 px-3 py-2 border rounded-lg" }}
+    </label>
+    <label class="block">
+      <span class="text-sm">Preço</span>
+      {{ form.preco|add_class:"w-full mt-1 px-3 py-2 border rounded-lg" }}
+    </label>
+    <div class="flex justify-end gap-2">
+      <a href="{% url 'cardapio_list' %}" class="px-3 py-2 rounded-lg border">Cancelar</a>
+      <button class="px-3 py-2 rounded-lg bg-neutral-900 text-white">Salvar</button>
+    </div>
+  </form>
+</section>
+{% endblock %}
