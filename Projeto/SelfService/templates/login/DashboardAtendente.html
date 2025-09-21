@@ -5,136 +5,100 @@
 {% block profile_icon %}AT{% endblock %}
 
 {% block content %}
-  <div class="flex justify-end pr-4 pt-3">
-    <a href="{% url 'pedidos_por_mesa' %}" class="text-sm underline">Ver pedidos por mesa</a>
-  </div>
+  <!-- 🔹 Link para pedidos -->
 
-  <!-- Filtros -->
   <section class="px-4 md:px-8 py-4 border-b">
     <div class="flex flex-wrap gap-2 items-center">
-      <a href="{% url 'pedidos_por_mesa' %}">
-  <button class="btn px-3 py-1.5 rounded-full bg-neutral-900 text-white text-sm filter-btn" data-filter="all">
-    Todas as mesas
-  </button>
-</a>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm filter-btn" data-filter="ocupada">Ocupadas</button>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm filter-btn" data-filter="reservada">Reservadas</button>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm filter-btn" data-filter="pedido">Pedidos</button>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm filter-btn" data-filter="reservar">Reservar</button>
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-900 text-white text-sm filter-btn" data-filter="all">
+        Cardapio
+      </button>
     </div>
   </section>
 
-  <!-- Kanban simples -->
-  <div id="kanban" class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+  <!-- 🔹 Grid de mesas + pedidos -->
+  <section class="max-w-6xl mx-auto px-4 py-6">
+    <div id="kanban" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {% for mp in mesas_pedidos %}
+        <div class="mesa-card border rounded-xl p-4"
+             data-status="{% if mp.mesa.ocupada %}ocupada{% elif mp.mesa.reservada %}reservada{% else %}livre{% endif %}"
+             data-pedido="{% if mp.pedidos %}pedido{% else %}sem-pedido{% endif %}">
 
-    <!-- Criados -->
-    <section class="space-y-3">
-      <header class="flex items-center justify-between">
-        <h2 class="text-base font-semibold">Criados</h2>
-        <span class="text-xs text-neutral-500">2</span>
-      </header>
+          <!-- Cabeçalho da mesa -->
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="font-semibold">Mesa {{ mp.mesa.numero }}</h3>
+            {% if mp.mesa.ocupada %}
+              <span class="text-xs px-2 py-0.5 rounded-full bg-yellow-100">ocupada</span>
+            {% endif %}
+            {% if mp.mesa.reservada %}
+              <span class="text-xs px-2 py-0.5 rounded-full bg-blue-100">reservada</span>
+            {% endif %}
+          </div>
 
-      <article class="card border border-neutral-200 p-4 elev bg-white filtro pedido">
-        <div class="flex items-center justify-between">
-          <span class="font-medium">Mesa 01</span>
-          <span class="text-xs text-neutral-500">2 min</span>
+          <!-- Pedidos -->
+          {% if mp.pedidos %}
+            <ul class="space-y-2">
+              {% for p in mp.pedidos %}
+                <li class="p-2 rounded border">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm">Pedido #{{ p.id }}</span>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-neutral-100">
+                      {{ p.get_status_display }}
+                    </span>
+                  </div>
+                  <div class="text-xs text-neutral-500">Criado em {{ p.criado_em|date:"d/m/Y H:i" }}</div>
+                  <ul class="mt-2 text-sm list-disc ml-5">
+                    {% for ip in p.itens_pedido.all %}
+                      <li>{{ ip.quantidade }}× {{ ip.item.nome }} — R$ {{ ip.item.preco }}</li>
+                    {% endfor %}
+                  </ul>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-neutral-500 text-sm">Sem pedidos.</p>
+          {% endif %}
         </div>
-        <p class="text-sm text-neutral-600 mt-1">2 itens • R$ 36,00</p>
-        <div class="mt-3 flex gap-2">
-          <button class="btn px-3 py-2 rounded-lg bg-neutral-100 text-xs">Detalhes</button>
-        </div>
-      </article>
-    </section>
+      {% endfor %}
+    </div>
+  </section>
 
-    <!-- Entregues -->
-    <section class="space-y-3">
-      <header class="flex items-center justify-between">
-        <h2 class="text-base font-semibold">Entregues</h2>
-        <span class="text-xs text-neutral-500">3</span>
-      </header>
+  <!-- 🔹 Script de filtro -->
+  <script>
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const filter = btn.dataset.filter;
 
-      <article class="card border border-neutral-200 p-4 bg-white filtro reservada">
-        <div class="flex items-center justify-between">
-          <span class="font-medium"> Mesa 02</span>
-          <span class="text-xs text-neutral-500">há 25 min</span>
-        </div>
-        <p class="text-sm text-neutral-600 mt-1">2 itens • R$ 41,50</p>
-        <div class="mt-3 flex gap-2">
-          <button class="btn px-3 py-2 rounded-lg bg-neutral-100 text-xs">Recibo</button>
-        </div>
-      </article>
-    </section>
+        // Resetar estilo dos botões
+        document.querySelectorAll(".filter-btn").forEach(b => {
+          b.classList.remove("bg-neutral-900", "text-white");
+          b.classList.add("bg-neutral-100", "text-black");
+        });
 
-    <!-- Mesas -->
-    <section class="space-y-3">
-      <header class="flex items-center justify-between">
-        <h2 class="text-base font-semibold">Mesas</h2>
-        <span class="text-xs text-neutral-500">3</span>
-      </header>
+        // Destacar botão ativo
+        btn.classList.remove("bg-neutral-100", "text-black");
+        btn.classList.add("bg-neutral-900", "text-white");
 
-      <article class="card border border-neutral-200 p-4 bg-white filtro ocupada">
-        <div class="flex items-center justify-between">
-          <span class="font-medium">Mesa 03</span>
-        </div>
-        <p class="text-sm text-neutral-600 mt-1">Disponível/Ocupada</p>
-        <div class="mt-3 flex gap-2">
-          <button class="btn px-3 py-2 rounded-lg bg-neutral-100 text-xs">Histórico</button>
-        </div>
-      </article>
-    </section>
-  </div>
+        // Aplicar filtro nos cards
+        document.querySelectorAll(".mesa-card").forEach(card => {
+          const status = card.dataset.status;
+          const pedido = card.dataset.pedido;
 
-  <!-- JS -->
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const sections = document.querySelectorAll('#kanban > section');
-
-  function applyFilter(filter) {
-    sections.forEach(section => {
-      const cards = Array.from(section.querySelectorAll('.filtro'));
-      let visibleCount = 0;
-
-      cards.forEach(card => {
-        const matches = (filter === 'all') || card.classList.contains(filter);
-        if (matches) {
-          card.classList.remove('hidden'); // Tailwind hidden = display:none
-          visibleCount++;
-        } else {
-          card.classList.add('hidden');
-        }
+          if (filter === "all") {
+            card.style.display = "";
+          } else if (filter === "ocupada" && status === "ocupada") {
+            card.style.display = "";
+          } else if (filter === "reservada" && status === "reservada") {
+            card.style.display = "";
+          } else if (filter === "pedido" && pedido === "pedido") {
+            card.style.display = "";
+          } else if (filter === "reservar" && status === "livre") {
+            card.style.display = "";
+          } else {
+            card.style.display = "none";
+          }
+        });
       });
-
-      // se não tiver cards visíveis, esconda a coluna inteira
-      if (visibleCount === 0) {
-        section.classList.add('hidden');
-      } else {
-        section.classList.remove('hidden');
-      }
-
-      // atualiza contador no header (opcional)
-      const countSpan = section.querySelector('header span.text-xs');
-      if (countSpan) countSpan.textContent = visibleCount;
     });
-  }
+  </script>
 
-  // comportamento dos botões
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => {
-        b.classList.remove('bg-neutral-900', 'text-white');
-        b.classList.add('bg-neutral-100');
-      });
-      btn.classList.remove('bg-neutral-100');
-      btn.classList.add('bg-neutral-900', 'text-white');
-
-      applyFilter(btn.dataset.filter);
-    });
-  });
-
-  // inicializa
-  applyFilter('all');
-});
-</script>
 {% endblock %}

@@ -10,7 +10,7 @@ from .views.Cardapio import (
 )
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from .views.Profile import MeuPerfilView
-
+from .views.Cardapio import CardapioListView
 
 urlpatterns = [
 
@@ -37,7 +37,7 @@ urlpatterns = [
 
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-
+     path("cardapio/", CardapioListView.as_view(), name="cardapio_list"),
     # Meu perfil
     path('perfil/', MeuPerfilView.as_view(), name='meu_perfil'),
 ]
