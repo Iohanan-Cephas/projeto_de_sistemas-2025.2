@@ -1,0 +1,58 @@
+{% extends "Base.html" %}
+{% block title %}Histórico de Pedidos{% endblock %}
+{% block header_title %}Histórico de Pedidos{% endblock %}
+{% block content %}
+<section class="max-w-6xl mx-auto px-4 py-6">
+
+  <h2 class="text-lg font-semibold mb-4">Histórico de Pedidos</h2>
+
+  <!-- filtros -->
+  <div class="flex space-x-2 mb-6">
+    <a href="{% url 'historico_pedidos' %}">
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-900 text-white text-sm">Todos</button>
+    </a>
+    <a href="?status=finalizado">
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Finalizados</button>
+    </a>
+    <a href="?status=cancelado">
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Cancelados</button>
+    </a>
+    <a href="?status=em_andamento">
+      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Em andamento</button>
+    </a>
+  </div>
+
+  <!-- lista de pedidos -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for p in pedidos %}
+      <div class="border rounded-xl p-4">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="font-semibold">Pedido #{{ p.id }}</h3>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-neutral-100">{{ p.get_status_display }}</span>
+        </div>
+        <div class="text-xs text-neutral-500">Mesa {{ p.mesa.numero }} — Criado em {{ p.criado_em|date:"d/m/Y H:i" }}</div>
+        <ul class="mt-2 text-sm list-disc ml-5">
+          {% for ip in p.itens_pedido.all %}
+            <li>{{ ip.quantidade }}× {{ ip.item.nome }} — R$ {{ ip.item.preco }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% empty %}
+      <p class="text-neutral-500">Nenhum pedido encontrado.</p>
+    {% endfor %}
+  </div>
+
+  <!-- paginação -->
+  {% if is_paginated %}
+    <div class="mt-6 flex justify-center space-x-2">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 border rounded">Anterior</a>
+      {% endif %}
+      <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 border rounded">Próxima</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}
