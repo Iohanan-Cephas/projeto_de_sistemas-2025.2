@@ -12,7 +12,11 @@
   <!-- Filtros -->
   <section class="px-4 md:px-8 py-4 border-b">
     <div class="flex flex-wrap gap-2 items-center">
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-900 text-white text-sm filter-btn" data-filter="all">Todas as mesas</button>
+    
+      <a href="{% url 'pedidos_por_mesa' %}">
+  <button class="btn px-3 py-1.5 rounded-full bg-neutral-900 text-white text-sm filter-btn" data-filter="all">
+    Todas as mesas
+  </button></a>
       <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm filter-btn" data-filter="ocupada">Ocupadas</button>
       <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm filter-btn" data-filter="reservada">Reservadas</button>
       <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm filter-btn" data-filter="pedido">Pedidos</button>
