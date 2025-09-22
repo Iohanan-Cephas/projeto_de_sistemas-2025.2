@@ -2,6 +2,7 @@
     - [Descrição do produto](#descrição-do-produto)
     - [Time](#time)
     - [Funcionalidade Essenciais e Estrutura do Sistema (MVP)](#funcionalidades-essenciais-e-estrutura-do-sistema-mvp)
+
         - [RF01 - Documentação e Infraestrutura Inicial do Projeto](#rf-01-documentação-e-infraestrutura-inicial-do-projeto)
         - [RF02 - Login](#rf-02-login)
         - [RF03 - Logout](#rf-03-logout)
@@ -56,6 +57,8 @@ GestAly é plicativo para restaurantes que funciona como um cardápio digital in
 ---
 
 ## Funcionalidades Essenciais e Estrutura do Sistema (MVP)
+### Objetivo:
+Garantir a estrutura mínima e essencial para o funcionamento inicial do sistema de gestão de mesas, permitindo autenticação segura, organização da infraestrutura do projeto, e o controle básico de visualização e atualização do estado das mesas por diferentes perfis (Gerente e Atendente).
 
 ### RF-01: Documentação e Infraestrutura Inicial do Projeto
 
@@ -86,6 +89,8 @@ GestAly é plicativo para restaurantes que funciona como um cardápio digital in
 **Como** Desenvolvedor, **eu quero** que a barra de navegação (navbar) seja um template base compartilhado em todas as telas de gerência **para** garantir consistência visual. 
 
 ## Gestão de Pedidos e Relatórios Diários
+### Objetivo: 
+Fornecer recursos para que gerentes e atendentes gerenciem de forma eficiente os pedidos e o cardápio, além de disponibilizar relatórios e históricos que permitam acompanhar o desempenho do restaurante em tempo real e no decorrer do dia.
 
 ### RF-10: Gerenciar Cardápio (Gerente)
 **Como** Gerente, **eu quero** poder gerenciar o cardápio do restaurante **para** adicionar, editar ou remover itens que são oferecidos aos clientes. 
@@ -109,6 +114,9 @@ GestAly é plicativo para restaurantes que funciona como um cardápio digital in
 **Como** Atendente, **eu quero** visualizar um histórico geral de todos os pedidos já feitos **para** consultar transações passadas. 
 
 ## Gestão de Funcionários e Sistema de Reservas
+
+### Objetivo: 
+Disponibilizar ferramentas para que o gerente administre sua equipe de atendentes e permitir que clientes e atendentes façam e acompanhem reservas de mesas, garantindo melhor organização do fluxo de atendimento e maior conveniência para o cliente.
 
 ### RF-17: Visualizar Todos os Atendentes
 **Como** Gerente, **eu quero**  ver uma lista de todos os atendentes com seus nomes e matrículas **para** gerenciar minha equipe. 
@@ -135,6 +143,9 @@ GestAly é plicativo para restaurantes que funciona como um cardápio digital in
 **Como** Cliente, **eu quero**  que o aplicativo tenha um botão "Ler QR Code" **para** futuras interações com a mesa. 
 
 ## Relatórios Avançados, Histórico e Interação com Clientes
+
+### Objetivo: 
+Oferecer recursos de análise detalhada e relatórios gráficos para apoiar a gestão estratégica do restaurante, além de ampliar a interação entre atendentes, gerentes e clientes por meio de canais de comunicação e funcionalidades de autoatendimento.
 
 ### RF-25: Visualizar Faturamento e Pedidos de Dia Especifico (Gerente)
 **Como** Gerente, **eu quero** poder selecionar um dia anterior **para** visualizar o faturamento e os pedidos daquela data, assim como faço para o "Dia de Hoje". 
