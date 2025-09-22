@@ -5,115 +5,70 @@
 {% block profile_icon %}AT{% endblock %}
 
 {% block content %}
-  <div class="flex justify-end pr-4 pt-3"><a href="{% url 'pedidos_por_mesa' %}" class="text-sm underline">Ver pedidos por mesa</a></div>
-  <!-- Filtros -->
-  <section class="px-4 md:px-8 py-4 border-b">
-    <div class="flex flex-wrap gap-2 items-center">
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-900 text-white text-sm">Todas as mesas</button>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Ocupadas</button>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Reservadas</button>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Pedidos</button>
-      <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Reservar</button>
-    </div>
-  </section>
 
-  <!-- Kanban simples -->
-  <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-
-    <!-- Criados -->
-    <section class="space-y-3">
-      <header class="flex items-center justify-between">
-        <h2 class="text-base font-semibold">Criados</h2>
-        <span class="text-xs text-neutral-500">2</span>
-      </header>
-
-      <!-- Card -->
-      <article class="card border border-neutral-200 p-4 elev bg-white">
-        <div class="flex items-center justify-between">
-          <span class="font-medium">#1015 • Mesa 08</span>
-          <span class="text-xs text-neutral-500">2 min</span>
-        </div>
-        <p class="text-sm text-neutral-600 mt-1">2 itens • R$ 36,00</p>
-        <div class="mt-3 flex gap-2">
-          <button class="btn px-3 py-2 rounded-lg bg-neutral-100 text-xs">Detalhes</button>
-        </div>
-      </article>
-    </section>
-
-    <!-- Entregues -->
-    <section class="space-y-3">
-      <header class="flex items-center justify-between">
-        <h2 class="text-base font-semibold">Entregues</h2>
-        <span class="text-xs text-neutral-500">3</span>
-      </header>
-
-      <article class="card border border-neutral-200 p-4 bg-white">
-        <div class="flex items-center justify-between">
-          <span class="font-medium">#1007 • Mesa 03</span>
-          <span class="text-xs text-neutral-500">há 25 min</span>
-        </div>
-        <p class="text-sm text-neutral-600 mt-1">2 itens • R$ 41,50</p>
-        <div class="mt-3 flex gap-2">
-          <button class="btn px-3 py-2 rounded-lg bg-neutral-100 text-xs">Recibo</button>
-        </div>
-      </article>
-    </section>
-
-    <!-- Mesas -->
-    <section class="space-y-3">
-      <header class="flex items-center justify-between">
-        <h2 class="text-base font-semibold">Mesas</h2>
-        <span class="text-xs text-neutral-500">3</span>
-      </header>
-
-      <article class="card border border-neutral-200 p-4 bg-white">
-        <div class="flex items-center justify-between">
-          <span class="font-medium">Mesa 03</span>
-        </div>
-        <p class="text-sm text-neutral-600 mt-1">Disponível/Ocupada</p>
-        <div class="mt-3 flex gap-2">
-          <button class="btn px-3 py-2 rounded-lg bg-neutral-100 text-xs">Histórico</button>
-        </div>
-      </article>
-    </section>
+<section class="card border border-neutral-200 bg-white p-5 elev mt-8">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="font-semibold">Histórico de Pedidos</h2>
+    <form method="get" class="flex gap-2">
+      <select name="status" class="text-sm border rounded-full px-2 py-1.5"
+              onchange="this.form.submit()">
+        <option value="todos" {% if request.GET.status == "todos" %}selected{% endif %}>Status: todos</option>
+        <option value="P" {% if request.GET.status == "P" %}selected{% endif %}>Pendente</option>
+        <option value="E" {% if request.GET.status == "E" %}selected{% endif %}>Em preparo</option>
+        <option value="C" {% if request.GET.status == "C" %}selected{% endif %}>Concluído</option>
+        <option value="F" {% if request.GET.status == "F" %}selected{% endif %}>Faturado</option>
+      </select>
+      <input type="text" name="q" value="{{ request.GET.q }}"
+             class="text-sm border rounded-full px-3 py-1.5"
+             placeholder="Buscar...">
+    </form>
   </div>
 
-  <!-- Histórico -->
-  <section class="card border border-neutral-200 bg-white p-5 elev mt-8">
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="font-semibold">Histórico de Pedidos</h2>
-      <div class="flex gap-2">
-        <select class="text-sm border rounded-full px-2 py-1.5">
-          <option>Status: todos</option>
-          <option>Criado</option>
-          <option>Pronto</option>
-          <option>Entregue</option>
-        </select>
-        <input class="text-sm border rounded-full px-3 py-1.5" placeholder="Buscar...">
-      </div>
-    </div>
+  <div class="overflow-auto">
+    <table class="min-w-full text-sm">
+      <thead class="text-left text-neutral-500">
+        <tr>
+          <th class="py-2 pr-4">#</th>
+          <th class="py-2 pr-4">Mesa</th>
+          <th class="py-2 pr-4">Itens</th>
+          <th class="py-2 pr-4">Total</th>
+          <th class="py-2 pr-4">Atendente</th>
+          <th class="py-2 pr-4">Status Pedido</th>
+          <th class="py-2">Status Mesa</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y">
+        {% for pedido in pedidos %}
+        <tr>
+          <td class="py-2 pr-4 font-medium">#{{ pedido.id }}</td>
+          <td class="py-2 pr-4">Mesa {{ pedido.mesa.numero }}</td>
+          <td class="py-2 pr-4">{{ pedido.itens.count }}</td>
+          <td class="py-2 pr-4">R$ {{ pedido.total|floatformat:2 }}</td>
+          <td class="py-2">{{ pedido.atendente.username }}</td>
+          <td class="py-2">
+            <span class="px-2 py-0.5 rounded-full bg-neutral-100 text-xs">
+              {{ pedido.get_status_display }}
+            </span>
+          </td>
+          <td class="py-2">
+            {% if pedido.mesa.ocupada %}
+              <span class="px-2 py-0.5 rounded-full bg-yellow-100 text-xs">Ocupada</span>
+            {% elif pedido.mesa.reservada %}
+              <span class="px-2 py-0.5 rounded-full bg-blue-100 text-xs">Reservada</span>
+            {% else %}
+              <span class="px-2 py-0.5 rounded-full bg-green-100 text-xs">Livre</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="text-center py-4 text-neutral-500">Nenhum pedido encontrado.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
 
-    <div class="overflow-auto">
-      <table class="min-w-full text-sm">
-        <thead class="text-left text-neutral-500">
-          <tr>
-            <th class="py-2 pr-4">#</th>
-            <th class="py-2 pr-4">Mesa</th>
-            <th class="py-2 pr-4">Itens</th>
-            <th class="py-2 pr-4">Total</th>
-            <th class="py-2">Atendente</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y">
-          <tr>
-            <td class="py-2 pr-4 font-medium">#1012</td>
-            <td class="py-2 pr-4">MESA-12</td>
-            <td class="py-2 pr-4">3</td>
-            <td class="py-2 pr-4">R$ 78,90</td>
-            <td class="py-2">Atendente 1</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+
 {% endblock %}
