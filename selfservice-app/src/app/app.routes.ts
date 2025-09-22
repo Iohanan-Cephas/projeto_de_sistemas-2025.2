@@ -1,9 +1,11 @@
+// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-
+  { path: '', redirectTo: 'mesas', pathMatch: 'full' },
   {
-    path: '',
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
+    path: 'mesas',
+    loadComponent: () =>
+      import('./pages/mesas/mesas.page').then((m) => m.MesasPage),
   },
-]
+];
