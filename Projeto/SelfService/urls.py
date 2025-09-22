@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     ListaMesasView, DetalheMesaView, AdicionarPedidoView,
     LoginView, LogoutView, DashboardView, DashboardAttendantView, DashboardManagerView,
-    LoginAPI, APIListarMesas
+    LoginAPI, APIListarMesas,
 )
 from .views.Pedidos import PedidosPorMesaView
 from .views.Cardapio import (
@@ -10,15 +10,19 @@ from .views.Cardapio import (
 )
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from .views.Profile import MeuPerfilView
+from .views.Historico import HistoricoPedidosView  
 
 
 urlpatterns = [
-
     path('', DashboardView.as_view(), name='dashboard'),
     path('mesas/', ListaMesasView.as_view(), name='lista_mesas'),
     path('mesas/<int:mesa_id>/', DetalheMesaView.as_view(), name='detalhe_mesa'),
     path('mesas/<int:mesa_id>/adicionar/', AdicionarPedidoView.as_view(), name='adicionar_pedido'),
 
+    # Histórico
+    path("historico/", HistoricoPedidosView.as_view(), name="historico_pedidos"),
+    
+    # Dashboards
     path('dashboard/atendente/', DashboardAttendantView.as_view(), name='dashboardAtendente'),
     path('dashboard/gerente/', DashboardManagerView.as_view(), name='dashboardGerente'),
 
@@ -35,9 +39,10 @@ urlpatterns = [
     path('cardapio/<int:pk>/editar/', CardapioUpdateView.as_view(), name='cardapio_update'),
     path('cardapio/<int:pk>/excluir/', CardapioDeleteView.as_view(), name='cardapio_delete'),
 
+    # Autenticação
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-
+    path("historico/", HistoricoPedidosView.as_view(), name="historico_pedidos"),
     # Meu perfil
     path('perfil/', MeuPerfilView.as_view(), name='meu_perfil'),
 ]

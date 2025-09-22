@@ -6,10 +6,11 @@ from django.shortcuts import redirect
 from ..models import ItemCardapio
 
 class RoleRequiredMixin:
-    role_required = 'GERENTE'
+    role_required = ('GERENTE', 'ATENDENTE')
+
     def dispatch(self, request, *args, **kwargs):
         role = request.session.get('role', 'ATENDENTE')
-        if role != self.role_required:
+        if role not in self.role_required:
             return redirect('dashboard')
         return super().dispatch(request, *args, **kwargs)
 

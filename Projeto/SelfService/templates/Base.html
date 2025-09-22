@@ -55,13 +55,11 @@
       <a href="{% url 'pedidos_por_mesa' %}"
          class="px-3 py-1.5 text-sm rounded-lg border hover:bg-neutral-50 {% active 'pedidos_por_mesa' %}">Pedidos por mesa</a>
 
-      {# Só mostra Cardápio para GERENTE #}
-      {% with role=request.session.role|default:'ATENDENTE' %}
-        {% if role == 'GERENTE' %}
-          <a href="{% url 'cardapio_list' %}"
-             class="px-3 py-1.5 text-sm rounded-lg border hover:bg-neutral-50 {% active 'cardapio_list' %}">Cardápio</a>
-        {% endif %}
-      {% endwith %}
+
+      <a href="{% url 'cardapio_list' %}"
+         class="px-3 py-1.5 text-sm rounded-lg border hover:bg-neutral-50 {% active 'cardapio_list' %}">Cardápio</a>
+
+      
     </nav>
   </div>
 </header>

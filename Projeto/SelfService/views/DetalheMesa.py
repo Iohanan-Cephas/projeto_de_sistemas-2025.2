@@ -1,0 +1,8 @@
+class DetalheMesaView(View):
+    def get(self, request, mesa_id):
+        mesa = get_object_or_404(Mesa, id=mesa_id)
+        pedidos = mesa.pedidos.all()
+        return render(request, 'SelfService/detalhe_mesa.html', {
+            'mesa': mesa,
+            'pedidos': pedidos
+        })
