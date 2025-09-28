@@ -1,127 +1,111 @@
 {% extends "Base.html" %}
-
 {% block title %}Painel • Atendente{% endblock %}
 {% block header_title %}Painel do Atendente{% endblock %}
 {% block profile_icon %}AT{% endblock %}
 
 {% block content %}
-  
+<div class="container-xxl">
 
-<div class="flex justify-end pr-4 pt-3">
-  <a href="{% url 'pedidos_por_mesa' %}" 
-     class="text-sm underline">
-     Ver pedidos por mesa
-  </a>
+  <!-- Ação rápida -->
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <a class="link-light link-underline-opacity-25 link-underline-opacity-75-hover"
+       href="{% url 'pedidos_por_mesa' %}">
+      Ver pedidos por mesa
+    </a>
+  </div>
+
+  <!-- Filtros topo (apenas visuais) -->
+  <ul class="nav nav-pills gap-2 mb-3 flex-wrap">
+    <li class="nav-item"><a class="nav-link active" href="#">Todas as mesas</a></li>
+    <li class="nav-item"><a class="nav-link" href="#">Ocupadas</a></li>
+    <li class="nav-item"><a class="nav-link" href="#">Reservadas</a></li>
+    <li class="nav-item"><a class="nav-link" href="#">Pedidos</a></li>
+    <li class="nav-item"><a class="nav-link" href="#">Reservar</a></li>
+    <li class="nav-item"><a class="nav-link" href="{% url 'cardapio_list' %}">Cardápio</a></li>
+  </ul>
+
+  <!-- Histórico de pedidos -->
+  <div class="card card-glass">
+    <div class="card-body">
+
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <h2 class="h4 mb-0">Histórico de Pedidos</h2>
+
+        <form method="get" class="d-flex align-items-center gap-2">
+          <select name="status" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+            <option value="todos" {% if request.GET.status == "todos" or not request.GET.status %}selected{% endif %}>Status: todos</option>
+            <option value="P" {% if request.GET.status == "P" %}selected{% endif %}>Pendente</option>
+            <option value="E" {% if request.GET.status == "E" %}selected{% endif %}>Em preparo</option>
+            <option value="C" {% if request.GET.status == "C" %}selected{% endif %}>Concluído</option>
+            <option value="F" {% if request.GET.status == "F" %}selected{% endif %}>Faturado</option>
+          </select>
+
+          <div class="input-group input-group-sm">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Buscar...">
+          </div>
+        </form>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-dark align-middle mb-0">
+          <thead>
+            <tr class="text-secondary">
+              <th>#</th>
+              <th>Mesa</th>
+              <th>Itens</th>
+              <th class="text-nowrap">Total</th>
+              <th>Atendente</th>
+              <th>Status Pedido</th>
+              <th>Status Mesa</th>
+              <th class="text-nowrap">Criado em</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pedido in pedidos %}
+              <tr>
+                <td class="fw-semibold">#{{ pedido.id }}</td>
+                <td>Mesa {{ pedido.mesa.numero }}</td>
+
+                {# se o related_name dos itens for diferente, ajuste para .itens.all|length #}
+                <td>{{ pedido.itens_pedido.all|length }}</td>
+
+                <td class="text-nowrap">R$ {{ pedido.total|default_if_none:0|floatformat:2 }}</td>
+                <td>{{ pedido.atendente.username|default:"—" }}</td>
+
+                <td>
+                  <span class="badge
+                    {% if pedido.status == 'P' %}text-bg-warning
+                    {% elif pedido.status == 'E' %}text-bg-info
+                    {% elif pedido.status == 'C' %}text-bg-success
+                    {% else %}text-bg-primary{% endif %}">
+                    {{ pedido.get_status_display }}
+                  </span>
+                </td>
+
+                <td>
+                  {% if pedido.mesa.ocupada %}
+                    <span class="badge text-bg-warning">Ocupada</span>
+                  {% elif pedido.mesa.reservada %}
+                    <span class="badge text-bg-info">Reservada</span>
+                  {% else %}
+                    <span class="badge text-bg-success">Livre</span>
+                  {% endif %}
+                </td>
+
+                <td class="text-nowrap">{{ pedido.criado_em|date:"d/m/Y, H:i" }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="8" class="text-center text-secondary py-4">Nenhum pedido encontrado.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
 </div>
-
-
-
-
-<!-- Filtros de mesas e cardápio -->
-<section class="px-4 md:px-8 py-4 border-b">
-  <div class="flex flex-wrap gap-2 items-center">
-
-    <!-- Link estilizado como botão -->
-    <a href="{% url 'pedidos_por_mesa' %}" 
-       class="btn px-3 py-1.5 rounded-full bg-neutral-900 text-white text-sm">
-       Todas as mesas
-    </a>
-
-    <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Ocupadas</button>
-    <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Reservadas</button>
-    <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Pedidos</button>
-    <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm">Reservar</button>
-
-    <!-- Cardápio  -->
-    <a href="{% url 'cardapio_list' %}"
-       class="btn px-3 py-1.5 rounded-full text-sm 
-              {% if request.resolver_match.url_name == 'cardapio_list' %}
-                bg-neutral-900 text-white
-              {% else %}
-                bg-neutral-100
-              {% endif %}">
-       Cardápio
-    </a>
-  </div>
-</section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<section class="card border border-neutral-200 bg-white p-5 elev mt-8">
-  <div class="flex items-center justify-between mb-4">
-    <h2 class="font-semibold">Histórico de Pedidos</h2>
-    <form method="get" class="flex gap-2">
-      <select name="status" class="text-sm border rounded-full px-2 py-1.5"
-              onchange="this.form.submit()">
-        <option value="todos" {% if request.GET.status == "todos" %}selected{% endif %}>Status: todos</option>
-        <option value="P" {% if request.GET.status == "P" %}selected{% endif %}>Pendente</option>
-        <option value="E" {% if request.GET.status == "E" %}selected{% endif %}>Em preparo</option>
-        <option value="C" {% if request.GET.status == "C" %}selected{% endif %}>Concluído</option>
-        <option value="F" {% if request.GET.status == "F" %}selected{% endif %}>Faturado</option>
-      </select>
-      <input type="text" name="q" value="{{ request.GET.q }}"
-             class="text-sm border rounded-full px-3 py-1.5"
-             placeholder="Buscar...">
-    </form>
-  </div>
-
-  <div class="overflow-auto">
-    <table class="min-w-full text-sm">
-      <thead class="text-left text-neutral-500">
-        <tr>
-          <th class="py-2 pr-4">#</th>
-          <th class="py-2 pr-4">Mesa</th>
-          <th class="py-2 pr-4">Itens</th>
-          <th class="py-2 pr-4">Total</th>
-          <th class="py-2 pr-4">Atendente</th>
-          <th class="py-2 pr-4">Status Pedido</th>
-          <th class="py-2">Status Mesa</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y">
-        {% for pedido in pedidos %}
-        <tr>
-          <td class="py-2 pr-4 font-medium">#{{ pedido.id }}</td>
-          <td class="py-2 pr-4">Mesa {{ pedido.mesa.numero }}</td>
-          <td class="py-2 pr-4">{{ pedido.itens.count }}</td>
-          <td class="py-2 pr-4">R$ {{ pedido.total|floatformat:2 }}</td>
-          <td class="py-2">{{ pedido.atendente.username }}</td>
-          <td class="py-2">
-            <span class="px-2 py-0.5 rounded-full bg-neutral-100 text-xs">
-              {{ pedido.get_status_display }}
-            </span>
-          </td>
-          <td class="py-2">
-            {% if pedido.mesa.ocupada %}
-              <span class="px-2 py-0.5 rounded-full bg-yellow-100 text-xs">Ocupada</span>
-            {% elif pedido.mesa.reservada %}
-              <span class="px-2 py-0.5 rounded-full bg-blue-100 text-xs">Reservada</span>
-            {% else %}
-              <span class="px-2 py-0.5 rounded-full bg-green-100 text-xs">Livre</span>
-            {% endif %}
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="7" class="text-center py-4 text-neutral-500">Nenhum pedido encontrado.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</section>
-
-
 {% endblock %}

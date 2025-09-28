@@ -1,104 +1,161 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login</title>
   <style>
-    :root { --bg:#fff; --text:#111; --muted:#8b8b8b; --accent:#111; --danger:#e06b6b; }
-    * { box-sizing: border-box; }
-    body {
-      margin:0; background:var(--bg); color:var(--text);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+    :root{
+      /* Fundo e tipografia */
+      --bg: #0b0f16;
+      --grad1: #121826;
+      --grad2: #0f1724;
+      --text: #e6edf3;
+      --muted: #93a0ad;
+      --danger: #e06b6b;
+
+      /* Card “glass” */
+      --glass-bg: rgba(255,255,255,.04);
+      --glass-bd: rgba(255,255,255,.08);
+
+      /* Campos */
+      --field-bg: #121821;
+      --field-bd: #2b3440;
+      --field-icon: #c7d0d9;
+      --focus: #38bdf8; /* azul do foco */
+
+      /* Botão principal */
+      --btn-bg: #ffffff;
+      --btn-text: #0b0f16;
+      --btn-bg-hover: #f2f4f7;
     }
-    .wrap {
-      min-height: 100vh; display:flex; align-items:center; justify-content:center; padding:24px;
+
+    *{ box-sizing:border-box }
+    html,body{ height:100% }
+    body{
+      margin:0; color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans";
+      background:
+        radial-gradient(1200px 800px at 15% -10%, var(--grad1) 0%, rgba(18,24,38,0) 60%),
+        radial-gradient(1200px 800px at 110% 0%, var(--grad2) 0%, rgba(15,23,36,0) 55%),
+        var(--bg);
     }
-    .card {
-      width: 100%; max-width: 360px;
+
+    .wrap{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px }
+
+    .card{
+      width:100%; max-width:440px;
+      background:var(--glass-bg);
+      border:1px solid var(--glass-bd);
+      backdrop-filter: blur(6px);
+      border-radius:16px;
+      padding:28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
     }
-    .logo {
-      width: 96px; height:96px; border-radius:999px; margin:0 auto 24px; display:block; object-fit:cover;
-      box-shadow: 0 1px 3px rgba(0,0,0,.15);
+
+    .avatar{
+      width:48px;height:48px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 8px; font-weight:700;
+      background: linear-gradient(135deg,#1e293b,#0b1220);
+      border:1px solid var(--glass-bd);
     }
-    h1 { font-size: 18px; font-weight: 600; text-align:center; margin: 0 0 16px; }
-    .field { margin-bottom: 14px; }
-    label { display:block; font-size: 12px; margin-bottom:6px; color:#444; }
-    .input {
-      width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:6px; background:#fff; outline:none;
+
+    h1{ font-size:24px; font-weight:700; text-align:center; margin:4px 0 4px }
+    .subtitle{ text-align:center; color:var(--muted); font-size:13px; margin-bottom:18px }
+
+    label{ display:block; font-size:13px; margin:12px 0 6px; color:#cfd6dd }
+    .input-wrap{
+      display:flex; align-items:center; gap:10px;
+      background:var(--field-bg);
+      border:1px solid var(--field-bd);
+      border-radius:8px; padding:10px 12px;
+      transition: border-color .2s, box-shadow .2s;
     }
-    .input:focus { border-color:#bbb; }
-    .pass-wrap { position: relative; }
-    .toggle {
-      position:absolute; right:10px; top:50%; transform: translateY(-50%);
-      border:none; background:transparent; cursor:pointer; font-size:14px;
+    .input-wrap:focus-within{
+      border-color: var(--focus);
+      box-shadow: 0 0 0 2px rgba(56,189,248,.35);
     }
-    .row { display:flex; align-items:center; justify-content:space-between; margin: 6px 0 14px; }
-    .remember { font-size:12px; display:flex; align-items:center; gap:6px; color:#333; }
-    .forgot { font-size:12px; color:var(--danger); text-decoration:none; }
-    .btn {
-      width:100%; padding:10px 12px; border:none; border-radius:6px; background:var(--accent); color:#fff; font-weight:600; cursor:pointer;
+    .icon{ color:var(--field-icon); font-size:16px; line-height:0 }
+    .input{
+      flex:1; background:transparent; border:none; outline:none; color:var(--text);
+      font-size:14px;
     }
-    .errorlist { list-style:none; padding:0; margin:0 0 8px; color:#b00020; font-size:12px; }
-    .help { text-align:center; color:var(--muted); font-size:12px; margin-top:12px; }
+    .toggle{
+      border:1px solid var(--field-bd);
+      background:#0e141c; color:#cfd6dd;
+      border-radius:6px; padding:6px 10px; cursor:pointer;
+    }
+
+    .row{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin:12px 0 16px }
+    .remember{ display:flex; align-items:center; gap:8px; color:#cfd6dd; font-size:13px; user-select:none }
+    .forgot{ font-size:13px; color:#cfd6dd; text-decoration:none }
+    .forgot:hover{ text-decoration:underline }
+
+    .btn{
+      width:100%; padding:10px 12px; border:none; border-radius:8px;
+      background:var(--btn-bg); color:var(--btn-text); font-weight:600; cursor:pointer;
+    }
+    .btn:hover{ background:var(--btn-bg-hover) }
+
+    .help{ text-align:center; color:var(--muted); font-size:12px; margin-top:14px }
+
+    .errorlist{ list-style:none; padding:0; margin:8px 0; color:var(--danger); font-size:13px }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="card">
-      <!-- troque a src para o seu logo -->
-      <img class="logo" src="https://dummyimage.com/192x192/000/fff&text=GA" alt="Logo"/>
+    <form method="post" class="card" novalidate>
+      {% csrf_token %}
+      {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+
+      <div class="avatar">SS</div>
       <h1>Login</h1>
+      <div class="subtitle">Use usuário ou e-mail</div>
 
       {% if form.non_field_errors %}
-        <ul class="errorlist">
+        <ul class="errorlist" aria-live="polite">
           {% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}
         </ul>
       {% endif %}
 
-      <form method="post" novalidate>
-        {% csrf_token %}
+      <!-- Usuário -->
+      <label for="id_username">Usuário ou e-mail</label>
+      <div class="input-wrap">
+        <span class="icon">👤</span>
+        <input type="text" id="id_username" name="username" class="input" placeholder="seuemail@exemplo.com" autocomplete="username" autofocus required>
+      </div>
+      {% for e in form.username.errors %}<div class="errorlist">{{ e }}</div>{% endfor %}
 
-        <div class="field">
-          <label for="id_username">Email ou usuário</label>
-          <input type="text" name="username" autofocus required id="id_username" class="input" placeholder="example@gmail.com" />
-          {% for e in form.username.errors %}<div class="errorlist">{{ e }}</div>{% endfor %}
-        </div>
+      <!-- Senha -->
+      <label for="id_password">Senha</label>
+      <div class="input-wrap">
+        <span class="icon">🔒</span>
+        <input type="password" id="id_password" name="password" class="input" placeholder="Digite sua senha" autocomplete="current-password" required>
+        <button type="button" class="toggle" id="togglePass" aria-label="Mostrar/ocultar senha">👁️</button>
+      </div>
+      {% for e in form.password.errors %}<div class="errorlist">{{ e }}</div>{% endfor %}
 
-        <div class="field pass-wrap">
-          <label for="id_password">Password</label>
-          <input type="password" name="password" required id="id_password" class="input" placeholder="Enter your password" />
-          <button type="button" class="toggle" aria-label="Mostrar senha" onclick="togglePass()">👁️</button>
-          {% for e in form.password.errors %}<div class="errorlist">{{ e }}</div>{% endfor %}
-        </div>
+      <div class="row">
+        <label class="remember"><input type="checkbox" name="remember"> Permanecer conectado</label>
+        <a class="forgot" href="#">Esqueci minha senha</a>
+      </div>
 
-        <div class="row">
-          <label class="remember">
-            <input type="checkbox" name="remember" />
-            Remember Me
-          </label>
-          <a class="forgot" href="#">Forgot Password?</a>
-        </div>
+      <button class="btn" type="submit">Entrar</button>
 
-        <button class="btn" type="submit">Login</button>
-      </form>
-
-      <div class="help">Use seu usuário/senha; o tipo (atendente/gerente) vem do perfil.</div>
-    </div>
+      <div class="help">O papel (gerente/atendente) vem do seu perfil.</div>
+    </form>
   </div>
 
   <script>
-    function togglePass(){
-      const input = document.getElementById('id_password');
-      input.type = input.type === 'password' ? 'text' : 'password';
-    }
-    // manter sessão longa se marcar "remember"
-    document.querySelector('form').addEventListener('submit', function(e){
-      const remember = document.querySelector('input[name="remember"]').checked;
-      if(remember){
-        // 2 semanas
-        document.cookie = 'session_expire=1209600; path=/';
-      }
+    document.getElementById('togglePass')?.addEventListener('click', function(){
+      const i = document.getElementById('id_password');
+      i.type = i.type === 'password' ? 'text' : 'password';
+    });
+    // opcional: remember me — ajuste também no view
+    document.querySelector('form')?.addEventListener('submit', ()=>{
+      const remember = document.querySelector('input[name="remember"]')?.checked;
+      if(remember){ document.cookie='session_expire=1209600; path=/'; } // 14 dias
     });
   </script>
 </body>

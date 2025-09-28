@@ -1,109 +1,127 @@
 {% extends "Base.html" %}
 {% block title %}Pedidos por mesa{% endblock %}
 {% block header_title %}Pedidos por mesa{% endblock %}
+
 {% block content %}
 
-<section class="max-w-6xl mx-auto px-4 py-6">
+<div class="container-xxl">
 
-  <!-- 🔹 Botões de filtro -->
-  <div class="flex gap-2 mb-6 flex-wrap">
-    <button class="btn px-3 py-1.5 rounded-full bg-neutral-900 text-white text-sm filter-btn" data-filter="all">
+  <!-- Filtros -->
+  <div class="d-flex flex-wrap gap-2 mb-3">
+    <button type="button" class="btn btn-light btn-sm filter-btn active" data-filter="all">
       Todas as mesas
     </button>
-    <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm filter-btn" data-filter="ocupada">
+    <button type="button" class="btn btn-outline-light btn-sm filter-btn" data-filter="ocupada">
       Ocupadas
     </button>
-    <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm filter-btn" data-filter="reservada">
+    <button type="button" class="btn btn-outline-light btn-sm filter-btn" data-filter="reservada">
       Reservadas
     </button>
-    <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm filter-btn" data-filter="pedido">
+    <button type="button" class="btn btn-outline-light btn-sm filter-btn" data-filter="pedido">
       Pedidos
     </button>
-    <button class="btn px-3 py-1.5 rounded-full bg-neutral-100 text-sm filter-btn" data-filter="reservar">
+    <button type="button" class="btn btn-outline-light btn-sm filter-btn" data-filter="livre">
       Livre
     </button>
   </div>
 
-  <!-- 🔹 Grid das mesas -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <!-- Lista de mesas -->
+  <div class="vstack gap-3">
     {% for mp in mesas_pedidos %}
-    <div class="mesa-card border rounded-xl p-4"
+    <div class="mesa-card card card-glass"
          data-status="{% if mp.mesa.ocupada %}ocupada{% elif mp.mesa.reservada %}reservada{% else %}livre{% endif %}"
          data-pedido="{% if mp.pedidos %}pedido{% else %}sem-pedido{% endif %}">
+      <div class="card-body">
 
-      <div class="flex items-center justify-between mb-2">
-        <h3 class="font-semibold">Mesa {{ mp.mesa.numero }}</h3>
-        {% if mp.mesa.ocupada %}
-          <span class="text-xs px-2 py-0.5 rounded-full bg-yellow-100">ocupada</span>
+        <!-- Cabeçalho da mesa -->
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <h3 class="h3 mb-0">Mesa {{ mp.mesa.numero }}</h3>
+          <div class="d-flex gap-2">
+            {% if mp.mesa.ocupada %}
+              <span class="badge text-bg-warning">ocupada</span>
+            {% endif %}
+            {% if mp.mesa.reservada %}
+              <span class="badge text-bg-info">reservada</span>
+            {% endif %}
+            {% if not mp.mesa.ocupada and not mp.mesa.reservada %}
+              <span class="badge text-bg-success">livre</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Pedidos da mesa -->
+        {% if mp.pedidos %}
+          <ul class="list-group list-group-flush">
+            {% for p in mp.pedidos %}
+              <li class="list-group-item bg-transparent text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="fw-semibold">Pedido #{{ p.id }}</div>
+                  <span class="badge
+                    {% if p.status == 'P' %}text-bg-warning
+                    {% elif p.status == 'E' %}text-bg-info
+                    {% elif p.status == 'C' %}text-bg-success
+                    {% else %}text-bg-primary{% endif %}">
+                    {{ p.get_status_display }}
+                  </span>
+                </div>
+                <div class="text-secondary small">Criado em {{ p.criado_em|date:"d/m/Y, H:i" }}</div>
+
+                {% with itens=p.itens_pedido.all %}
+                  {% if itens %}
+                    <ul class="mt-2 small ps-4">
+                      {% for ip in itens %}
+                        <li>
+                          {{ ip.quantidade }}× {{ ip.item.nome }} — R$ {{ ip.item.preco|default_if_none:0|floatformat:2 }}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endwith %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-secondary mb-0">Sem pedidos.</p>
         {% endif %}
-        {% if mp.mesa.reservada %}
-          <span class="text-xs px-2 py-0.5 rounded-full bg-blue-100">reservada</span>
-        {% endif %}
+
       </div>
-
-      {% if mp.pedidos %}
-        <ul class="space-y-2">
-          {% for p in mp.pedidos %}
-          <li class="p-2 rounded border">
-            <div class="flex items-center justify-between">
-              <span class="text-sm">Pedido #{{ p.id }}</span>
-              <span class="text-xs px-2 py-0.5 rounded-full bg-neutral-100">{{ p.get_status_display }}</span>
-            </div>
-            <div class="text-xs text-neutral-500">Criado em {{ p.criado_em }}</div>
-            <ul class="mt-2 text-sm list-disc ml-5">
-              {% for ip in p.itens_pedido.all %}
-                <li>{{ ip.quantidade }}× {{ ip.item.nome }} — R$ {{ ip.item.preco }}</li>
-              {% endfor %}
-            </ul>
-          </li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <p class="text-neutral-500 text-sm">Sem pedidos.</p>
-      {% endif %}
     </div>
+    {% empty %}
+      <div class="text-secondary">Nenhuma mesa encontrada.</div>
     {% endfor %}
   </div>
-</section>
+</div>
 
-<!-- 🔹 Script para filtro -->
+<!-- Filtro (JS simples) -->
 <script>
-document.querySelectorAll(".filter-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const filter = btn.dataset.filter;
+(function(){
+  const btns = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.mesa-card');
 
-    // resetar estilo dos botões
-    document.querySelectorAll(".filter-btn").forEach(b => {
-      b.classList.remove("bg-neutral-900", "text-white");
-      b.classList.add("bg-neutral-100", "text-sm", "text-black");
+  function apply(filter){
+    cards.forEach(card => {
+      const st = card.dataset.status;     // ocupada | reservada | livre
+      const pd = card.dataset.pedido;     // pedido | sem-pedido
+
+      let show = false;
+      if (filter === 'all') show = true;
+      else if (filter === 'pedido') show = (pd === 'pedido');
+      else show = (st === filter);
+
+      card.classList.toggle('d-none', !show);
     });
+  }
 
-    // destacar botão ativo
-    btn.classList.remove("bg-neutral-100", "text-black");
-    btn.classList.add("bg-neutral-900", "text-white");
-
-    // aplicar filtro nos cards
-    document.querySelectorAll(".mesa-card").forEach(card => {
-      const status = card.dataset.status;
-      const pedido = card.dataset.pedido;
-
-      if (filter === "all") {
-        card.style.display = "";
-      } else if (filter === "ocupada" && status === "ocupada") {
-        card.style.display = "";
-      } else if (filter === "reservada" && status === "reservada") {
-        card.style.display = "";
-      } else if (filter === "pedido" && pedido === "pedido") {
-        card.style.display = "";
-      } else if (filter === "reservar" && status === "livre") {
-        card.style.display = "";
-      } else {
-        card.style.display = "none";
-      }
+  btns.forEach(b=>{
+    b.addEventListener('click', ()=>{
+      btns.forEach(x=>x.classList.remove('active','btn-light'));
+      btns.forEach(x=>x.classList.add('btn-outline-light'));
+      b.classList.remove('btn-outline-light');
+      b.classList.add('btn-light','active');
+      apply(b.dataset.filter);
     });
   });
-});
+})();
 </script>
 
 {% endblock %}
-

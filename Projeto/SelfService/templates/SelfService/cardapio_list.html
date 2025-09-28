@@ -1,58 +1,91 @@
 {% extends "Base.html" %}
 {% block title %}Cardápio{% endblock %}
 {% block header_title %}Cardápio{% endblock %}
+
 {% block content %}
-<section class="max-w-6xl mx-auto px-4 py-6">
-  <div class="flex items-center justify-between mb-4">
-    <h2 class="text-lg font-semibold">Itens do cardápio</h2>
+<div class="container-xxl">
 
-    {# Só mostra o botão de criar para GERENTE #}
-    {% if request.session.role == "GERENTE" %}
-      <a href="{% url 'cardapio_create' %}" 
-         class="px-3 py-2 bg-neutral-900 text-white rounded-lg text-sm">
-         Novo item
-      </a>
-    {% endif %}
+  <!-- Título + ações -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h2 class="h3 mb-0">Itens do cardápio</h2>
+
+    <div class="d-flex flex-wrap gap-2">
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input id="menuSearch" type="text" class="form-control" placeholder="Buscar por nome ou descrição">
+      </div>
+
+      {% if request.session.role == "GERENTE" %}
+        <a href="{% url 'cardapio_create' %}" class="btn btn-light">
+          <i class="bi bi-plus-lg me-2"></i>Novo item
+        </a>
+      {% endif %}
+    </div>
   </div>
 
-  <div class="overflow-x-auto border rounded-xl">
-    <table class="min-w-full divide-y">
-      <thead class="bg-neutral-50">
-        <tr>
-          <th class="text-left px-4 py-2">Nome</th>
-          <th class="text-left px-4 py-2">Descrição</th>
-          <th class="text-left px-4 py-2">Preço</th>
-          {% if request.session.role == "GERENTE" %}
-            <th class="px-4 py-2"></th>
-          {% endif %}
-        </tr>
-      </thead>
-      <tbody class="divide-y">
-        {% for it in itens %}
-        <tr>
-          <td class="px-4 py-2 font-medium">{{ it.nome }}</td>
-          <td class="px-4 py-2 text-neutral-600">{{ it.descricao|default:"—" }}</td>
-          <td class="px-4 py-2">R$ {{ it.preco }}</td>
+  <!-- Tabela -->
+  <div class="card card-glass">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-dark align-middle mb-0" id="menuTable">
+          <thead>
+            <tr class="text-secondary">
+              <th>Nome</th>
+              <th>Descrição</th>
+              <th class="text-nowrap">Preço</th>
+              {% if request.session.role == "GERENTE" %}
+                <th class="text-end">Ações</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for it in itens %}
+              <tr>
+                <td class="fw-semibold">{{ it.nome }}</td>
+                <td class="text-secondary">{{ it.descricao|default:"—" }}</td>
+                <td class="text-nowrap">R$ {{ it.preco|default_if_none:0|floatformat:2 }}</td>
 
-          {% if request.session.role == "GERENTE" %}
-            <td class="px-4 py-2 text-right">
-              <a href="{% url 'cardapio_update' it.pk %}" 
-                 class="px-2 py-1 text-sm rounded bg-neutral-100">Editar</a>
-              <a href="{% url 'cardapio_delete' it.pk %}" 
-                 class="px-2 py-1 text-sm rounded bg-red-50 text-red-700">Excluir</a>
-            </td>
-          {% endif %}
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="{% if request.session.role == 'GERENTE' %}4{% else %}3{% endif %}" 
-              class="px-4 py-6 text-center text-neutral-500">
-            Nenhum item cadastrado.
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+                {% if request.session.role == "GERENTE" %}
+                  <td class="text-end">
+                    <a href="{% url 'cardapio_update' it.pk %}" class="btn btn-outline-light btn-sm">
+                      <i class="bi bi-pencil me-1"></i>Editar
+                    </a>
+                    <a href="{% url 'cardapio_delete' it.pk %}" class="btn btn-outline-danger btn-sm"
+                       onclick="return confirm('Excluir {{ it.nome }}? Esta ação não pode ser desfeita.');">
+                      <i class="bi bi-trash me-1"></i>Excluir
+                    </a>
+                  </td>
+                {% endif %}
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="{% if request.session.role == 'GERENTE' %}4{% else %}3{% endif %}"
+                    class="text-center text-secondary py-4">
+                  Nenhum item cadastrado.
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
-</section>
+
+</div>
+
+<!-- Busca rápida (client-side) -->
+<script>
+(() => {
+  const input = document.getElementById('menuSearch');
+  const tbody = document.querySelector('#menuTable tbody');
+  if (!input || !tbody) return;
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    [...tbody.rows].forEach(tr => {
+      tr.classList.toggle('d-none', !tr.innerText.toLowerCase().includes(q));
+    });
+  });
+})();
+</script>
 {% endblock %}
