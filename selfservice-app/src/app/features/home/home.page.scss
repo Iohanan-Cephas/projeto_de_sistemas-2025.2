@@ -1,0 +1,176 @@
+:host { display: block; }
+
+/* Header simples branco */
+ion-toolbar {
+  --background: #fff;
+  --color: var(--ion-color-dark);
+  box-shadow: 0 1px 6px rgba(0,0,0,.06);
+}
+
+/* Hero com busca e chips */
+.hero {
+  padding: 16px;
+
+  h2 {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  ion-searchbar {
+    --background: #fff;
+    --border-radius: 14px;
+    --box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    margin-bottom: 10px;
+  }
+
+  .cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    /* ====== CHIPS CORRIGIDOS ====== */
+    ion-chip {
+      /* estado padrão (visível): fundo cinza claro + texto preto */
+      --background: #f4f4f4;
+      --color: #000;
+      --border-radius: 999px;
+      height: 34px;
+      border: 1px solid #eaeaea;
+
+      ion-label {
+        color: #000 !important; /* garante visibilidade */
+        font-weight: 500;
+      }
+
+      /* quando você adicionar a classe .chip-selected no HTML/TS */
+      &.chip-selected {
+        --background: #000;
+        --color: #fff;
+        border-color: #000;
+
+        ion-label {
+          color: #fff !important;
+        }
+      }
+
+      /* se em algum lugar usar [outline], mantém o texto preto */
+      &.ion-color-undefined[outline] {
+        --background: #fff;
+        --color: #000;
+        border: 1px solid #eee;
+
+        ion-label {
+          color: #000 !important;
+        }
+      }
+    }
+    /* ====== FIM DOS CHIPS ====== */
+  }
+}
+
+/* Card do destaque (fixo) */
+.featured {
+  margin: 10px 16px 6px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+
+  ion-img {
+    height: 150px;
+    object-fit: cover;
+  }
+
+  ion-card-title { font-weight: 800; }
+  ion-card-subtitle { color: var(--ion-color-medium); }
+
+  ion-card-content {
+    p { color: #444; margin-top: 2px; }
+
+    .meta {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .rating {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        ion-icon {
+          color: #f5a524; /* amarelinho do star */
+          font-size: 18px;
+        }
+        span { font-weight: 700; margin-left: 2px; }
+      }
+
+      .cta {
+        --background: #000;
+        --color: #fff;
+        --border-radius: 10px;
+        height: 36px;
+      }
+    }
+  }
+}
+
+/* Blocos de lista */
+.block { padding: 8px 12px 12px; }
+
+.block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 4px 6px;
+
+  h3 { margin: 0; font-weight: 800; }
+  .see-all {
+    color: #ff6b6b;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .count {
+    color: var(--ion-color-medium);
+    font-weight: 600;
+  }
+}
+
+/* item de restaurante */
+.res-item {
+  --background: #fff;
+  border-radius: 14px;
+  margin: 6px 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,.06);
+
+  ion-avatar {
+    width: 44px;
+    height: 44px;
+    img { object-fit: cover; }
+  }
+
+  ion-label {
+    h4 { margin: 0; font-weight: 700; }
+    p { margin: 4px 0 0; color: var(--ion-color-medium); }
+  }
+}
+
+/* dark mode básico */
+@media (prefers-color-scheme: dark) {
+  ion-toolbar { --background: var(--ion-color-step-50); }
+  .featured { box-shadow: 0 10px 24px rgba(0,0,0,.4); }
+  .res-item { box-shadow: 0 2px 12px rgba(0,0,0,.35); }
+
+  .hero .cats ion-chip {
+    /* melhora contraste no dark */
+    --background: var(--ion-color-step-150);
+    --color: #fff;
+    border-color: var(--ion-color-step-200);
+
+    &.chip-selected {
+      --background: #000;
+      --color: #fff;
+      border-color: #000;
+    }
+  }
+}

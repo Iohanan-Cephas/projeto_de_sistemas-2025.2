@@ -1,0 +1,74 @@
+<ion-header class="topbar">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ restaurant.name }}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button fill="clear"><ion-icon name="heart-outline"></ion-icon></ion-button>
+      <ion-button fill="clear"><ion-icon name="share-outline"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+
+  <!-- HERO -->
+  <section class="hero">
+    <ion-img [src]="restaurant.cover" alt="Capa do restaurante"></ion-img>
+    <div class="overlay"></div>
+
+    <div class="info">
+      <h1>{{ restaurant.name }}</h1>
+      <p class="cat-line">
+        <span class="cat">{{ restaurant.category }}</span>
+        <span class="dot">•</span>
+        <span class="price">{{ restaurant.priceTier }}</span>
+      </p>
+
+      <div class="rating">
+        <ion-icon name="star" *ngFor="let s of stars" [class.filled]="restaurant.rating >= (stars.indexOf(s) + 1)"></ion-icon>
+        <span class="score">{{ restaurant.rating | number:'1.1-1' }}</span>
+        <span class="reviews">({{ restaurant.reviews }} avaliações)</span>
+      </div>
+
+      <!-- tags (sem Delivery/Pet) -->
+      <div class="tags" *ngIf="restaurant.tags?.length">
+        <ion-chip *ngFor="let t of restaurant.tags">
+          <ion-label>{{ t }}</ion-label>
+        </ion-chip>
+      </div>
+
+      <div class="address">
+        <ion-icon name="location-outline"></ion-icon>
+        <span>{{ restaurant.address }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEGMENT STICKY -->
+  <div class="tabs-sticky">
+    <ion-segment value="menu" mode="ios">
+      <ion-segment-button value="menu" [routerLink]="['menu']">
+        <ion-icon name="restaurant-outline"></ion-icon>
+        <ion-label>Cardápio</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button value="reserve" [routerLink]="['reserve']">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <ion-label>Reserve agora</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button value="qrcode" [routerLink]="['qrcode']">
+        <ion-icon name="qr-code-outline"></ion-icon>
+        <ion-label>QR Code da mesa</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <!-- CONTEÚDO DAS ROTAS FILHAS -->
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+</ion-content>

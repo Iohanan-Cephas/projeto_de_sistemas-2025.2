@@ -1,0 +1,100 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Explorar</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <!-- HERO / BUSCA -->
+  <section class="hero">
+    <h2>Buscar restaurantes</h2>
+    <ion-searchbar
+      [(ngModel)]="q"
+      (ionChange)="onSearch()"
+      debounce="300"
+      placeholder="Digite o nome do restaurante">
+    </ion-searchbar>
+
+    <!-- categorias rápidas (chips) -->
+    <div class="cats" *ngIf="categories.length">
+      <ion-chip
+        *ngFor="let c of categories"
+        (click)="selectCat(c)"
+        [class.chip-selected]="selectedCat === c">
+        <ion-label>{{ c }}</ion-label>
+      </ion-chip>
+    </div>
+  </section>
+
+  <!-- RESTAURANTE EM DESTAQUE (fixo) -->
+  <ion-card class="featured" button [routerLink]="['/restaurant', fixedRestaurant.id]">
+    <ion-img [src]="fixedRestaurant.image" alt="Restaurante"></ion-img>
+    <ion-card-header>
+      <ion-card-title>{{ fixedRestaurant.name }}</ion-card-title>
+      <ion-card-subtitle>{{ fixedRestaurant.category }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>{{ fixedRestaurant.description }}</p>
+      <div class="meta">
+        <div class="rating">
+          <ion-icon name="star" *ngFor="let s of stars"></ion-icon>
+          <span>{{ fixedRestaurant.rating.toFixed(1) }}</span>
+        </div>
+        <ion-button size="small" class="cta" fill="solid">Ver cardápio</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- RECENTES -->
+  <section class="block" *ngIf="recentRestaurants.length">
+    <div class="block-head">
+      <h3>Recentes</h3>
+      <a class="see-all" (click)="seeAllRecents()">Ver todos</a>
+    </div>
+
+    <ion-list inset="true">
+      <ion-item
+        class="res-item"
+        *ngFor="let r of recentRestaurants"
+        [routerLink]="['/restaurant', r.id]">
+        <ion-avatar slot="start">
+          <img [src]="r.image" alt="thumb"/>
+        </ion-avatar>
+        <ion-label>
+          <h4>{{ r.name }}</h4>
+          <p>{{ r.category }}</p>
+        </ion-label>
+        <ion-badge color="dark">{{ r.distance }}</ion-badge>
+      </ion-item>
+    </ion-list>
+  </section>
+
+  <!-- RESULTADOS DE BUSCA -->
+  <section class="block" *ngIf="results.length">
+    <div class="block-head">
+      <h3>Resultados</h3>
+      <span class="count">{{ results.length }}</span>
+    </div>
+
+    <ion-list inset="true">
+      <ion-item
+        class="res-item"
+        *ngFor="let r of results"
+        [routerLink]="['/restaurant', r.id]">
+        <ion-avatar slot="start">
+          <img [src]="r.image" alt="thumb"/>
+        </ion-avatar>
+        <ion-label>
+          <h4>{{ r.name }}</h4>
+          <p>{{ r.category }}</p>
+        </ion-label>
+        <ion-icon name="chevron-forward" slot="end"></ion-icon>
+      </ion-item>
+    </ion-list>
+  </section>
+
+</ion-content>
+
+
+

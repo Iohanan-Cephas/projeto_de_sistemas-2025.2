@@ -1,0 +1,15 @@
+<ion-segment [(ngModel)]="selectedCat" (ionChange)="loadItems()" class="ion-padding">
+  <ion-segment-button [value]="undefined">Todos</ion-segment-button>
+  <ion-segment-button *ngFor="let c of cats" [value]="c.id">{{ c.name }}</ion-segment-button>
+</ion-segment>
+
+<ion-list>
+  <ion-item *ngFor="let it of items">
+    <ion-label>
+      <h2>{{ it.name }}</h2>
+      <p>{{ it.description }}</p>
+    </ion-label>
+    <ion-note slot="end">{{ it.price | currency:'BRL' }}</ion-note>
+    <ion-button fill="clear" slot="end" (click)="add(it)">Adicionar</ion-button>
+  </ion-item>
+</ion-list>

@@ -1,0 +1,40 @@
+ion-item {
+  --background: #fff;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+
+  ion-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--ion-color-dark);
+  }
+
+  ion-input {
+    border: 1px solid var(--ion-color-light-shade);
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin-top: 4px;
+    font-size: 0.95rem;
+    color: var(--ion-color-medium);
+  }
+}
+
+ion-list {
+  margin-top: 16px;
+}
+
+ion-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-left: 8px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-transform: capitalize;
+}
+
+ion-button {
+  font-size: 0.85rem;
+  font-weight: 500;
+  --border-radius: 8px;
+}

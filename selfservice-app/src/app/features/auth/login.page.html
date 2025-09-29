@@ -1,0 +1,61 @@
+<ion-content fullscreen>
+  <div class="screen">
+    <div class="card">
+      <ion-img class="logo" src="assets/logo.svg" alt="Logo"></ion-img>
+
+      <!-- Email -->
+      <div class="field">
+        <label>Email</label>
+        <ion-item class="input" lines="none">
+          <ion-input
+            type="email"
+            placeholder="seuemail@gmail.com"
+            [(ngModel)]="email"
+            autocomplete="email"
+            (keyup.enter)="submit()">
+          </ion-input>
+        </ion-item>
+      </div>
+
+      <!-- Password -->
+      <div class="field">
+        <label>Senha</label>
+        <ion-item class="input" lines="none">
+          <ion-input
+            [type]="showPw ? 'text' : 'password'"
+            placeholder="Coloque sua senha"
+            [(ngModel)]="password"
+            autocomplete="current-password"
+            (keyup.enter)="submit()">
+          </ion-input>
+          <ion-button fill="clear" size="small" slot="end" class="eye" (click)="showPw = !showPw">
+            <ion-icon [name]="showPw ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </div>
+
+      <!-- Remember / Forgot -->
+      <div class="row between">
+        <ion-item lines="none" class="remember">
+          <ion-checkbox slot="start" [(ngModel)]="remember"></ion-checkbox>
+          <ion-label>Lembrar de mim</ion-label>
+        </ion-item>
+
+        <button type="button" class="link-danger" (click)="forgotPassword()">
+          Esqueci minha senha
+        </button>
+      </div>
+
+      <!-- Buttons -->
+      <ion-button expand="block" size="large" class="btn-primary" [disabled]="!isValid || loading" (click)="submit()">
+        <ion-spinner *ngIf="loading" name="dots"></ion-spinner>
+        <span *ngIf="!loading">Login</span>
+      </ion-button>
+
+      <ion-button expand="block" size="large" fill="outline" class="btn-outline" (click)="goRegister()">
+        Criar conta
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
+

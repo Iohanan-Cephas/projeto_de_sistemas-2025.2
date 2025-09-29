@@ -1,0 +1,51 @@
+ion-segment {
+  margin: 12px 0;
+  border-radius: 8px;
+  background: var(--ion-color-light);
+
+  ion-segment-button {
+    --indicator-color: var(--ion-color-primary);
+    --color-checked: var(--ion-color-primary);
+    text-transform: capitalize;
+    font-weight: 500;
+  }
+}
+
+ion-list {
+  margin-top: 12px;
+}
+
+ion-item {
+  border-radius: 12px;
+  margin-bottom: 10px;
+  --background: #fff;
+  --border-color: var(--ion-color-light-shade);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+ion-label {
+  h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--ion-color-dark);
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: var(--ion-color-medium);
+    margin-top: 4px;
+  }
+}
+
+ion-note {
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: var(--ion-color-success);
+  margin-left: 8px;
+}
+
+ion-button {
+  font-size: 0.8rem;
+  color: var(--ion-color-primary);
+}

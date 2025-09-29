@@ -1,0 +1,14 @@
+<ion-item>
+  <ion-label>Data</ion-label>
+  <ion-input [value]="date" (ionBlur)="load()"></ion-input>
+</ion-item>
+
+<ion-list *ngIf="avail">
+  <ion-item *ngFor="let t of avail.tables">
+    <ion-label>{{ t.code }} · {{ t.seats }} lugares</ion-label>
+    <ion-badge [color]="t.status === 'LIVRE' ? 'success' : (t.status === 'RESERVADA' ? 'warning' : 'medium')">
+      {{ t.status }}
+    </ion-badge>
+    <ion-button slot="end" [disabled]="t.status !== 'LIVRE'" (click)="reserve(t)">Reservar</ion-button>
+  </ion-item>
+</ion-list>
