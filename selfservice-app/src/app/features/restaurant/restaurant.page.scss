@@ -1,0 +1,112 @@
+/* Topbar minimalista */
+.topbar ion-toolbar {
+  --background: #fff;
+  --color: #000;
+  box-shadow: 0 1px 6px rgba(0,0,0,.06);
+}
+.topbar ion-button {
+  --color: #000;
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  height: 220px;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  overflow: hidden;
+
+  ion-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(1.02);
+    transform: scale(1.02);
+  }
+
+  .overlay {
+    /* gradiente para leitura do texto */
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.55) 100%);
+  }
+
+  .info {
+    position: absolute; left: 16px; right: 16px; bottom: 14px;
+    color: #fff;
+
+    h1 {
+      margin: 0 0 4px; font-size: 1.4rem; font-weight: 800; letter-spacing: .2px;
+      text-shadow: 0 2px 8px rgba(0,0,0,.35);
+    }
+
+    .cat-line {
+      margin: 0;
+      opacity: .95;
+      .cat { font-weight: 600; }
+      .dot { margin: 0 6px; }
+      .price { font-weight: 600; }
+    }
+
+    .rating {
+      margin-top: 8px;
+      display: flex; align-items: center; gap: 6px;
+      ion-icon {
+        font-size: 18px; color: rgba(255,255,255,.55);
+        &.filled { color: #f5a524; }
+      }
+      .score { font-weight: 800; }
+      .reviews { opacity: .9; font-size: .9rem; }
+    }
+
+    .tags {
+      margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap;
+      ion-chip {
+        --background: rgba(255,255,255,.2);
+        --color: #fff;
+        --border-radius: 999px;
+        backdrop-filter: blur(2px);
+        height: 28px;
+      }
+    }
+
+    .address {
+      margin-top: 8px; display: flex; gap: 6px; align-items: center;
+      ion-icon { font-size: 18px; }
+      span { opacity: .95; }
+    }
+  }
+}
+
+/* SEGMENT STICKY abaixo do hero */
+.tabs-sticky {
+  position: sticky; top: 0; z-index: 10;
+  background: #fff;
+  padding: 8px 12px 0;
+  box-shadow: 0 6px 16px rgba(0,0,0,.06);
+
+  ion-segment {
+    margin: 0 4px 8px;
+    --indicator-color: #000;
+  }
+  ion-segment-button {
+    --color-checked: #000;
+    --color: #666;
+    font-weight: 700;
+  }
+}
+
+/* Wrapper para o conteúdo das rotas filhas */
+.content {
+  padding: 12px 16px 16px;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .topbar ion-toolbar { --background: var(--ion-color-step-50); --color: #fff; }
+
+  .tabs-sticky {
+    background: var(--ion-color-step-50);
+    box-shadow: 0 6px 16px rgba(0,0,0,.35);
+  }
+}
+
