@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  IonContent, IonHeader, IonTitle, IonToolbar, IonInput, IonItem, IonButton,
-  IonList, IonSpinner, IonToast, IonText, IonIcon
+  IonContent, IonInput, IonItem, IonButton,
+  IonList, IonSpinner, IonToast, IonText
 } from '@ionic/angular/standalone';
 import { AuthService } from '../services/auth.service';
 import { finalize } from 'rxjs/operators';
@@ -15,21 +15,25 @@ import { NgZone } from '@angular/core';
   selector: 'app-login',
   imports: [
     CommonModule, ReactiveFormsModule,
-    IonContent, IonHeader, IonTitle, IonToolbar, IonInput, IonItem, IonButton,
-    IonList, IonSpinner, IonToast, IonText, IonIcon
+    IonContent, IonInput, IonItem, IonButton,
+    IonList, IonSpinner, IonToast, IonText
   ],
   styles: [`
-    .wrap {
-      min-height: 100%;
-      display: grid;
-      place-items: center;
-      padding: 24px;
+    /* Centralização real do conteúdo do ion-content */
+    ion-content.center::part(scroll) {
+      min-height: 100dvh;                 /* usa a viewport do dispositivo */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;                       /* espaçamento nas bordas */
     }
+
     .login-card {
       width: 100%;
       max-width: 420px;
       padding: 28px 22px;
     }
+
     .brand {
       display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
     }
@@ -47,7 +51,8 @@ import { NgZone } from '@angular/core';
     .submit { margin-top: 6px; }
   `],
   template: `
-  <ion-content class="wrap">
+  <!-- fullscreen remove offsets e deixa o conteúdo ocupar toda a tela -->
+  <ion-content [fullscreen]="true" class="center">
     <div class="card login-card">
       <div class="brand">
         <div class="logo">SS</div>
@@ -87,7 +92,7 @@ export class LoginPage {
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
   private router = inject(Router);
-  private zone = inject(NgZone);            // ✅ injeta a NgZone
+  private zone = inject(NgZone);
 
   loading = false;
   error = false;
@@ -100,17 +105,14 @@ export class LoginPage {
   onSubmit() {
     if (this.form.invalid) return;
     this.loading = true;
-
     const { username, password } = this.form.value;
+
     this.auth.login(String(username), String(password))
       .pipe(finalize(() => this.loading = false))
       .subscribe({
-        next: () => {
-          // ✅ garante que a navegação rode dentro do ciclo do Angular
-          this.zone.run(() => {
-            this.router.navigateByUrl('/home', { replaceUrl: true });
-          });
-        },
+        next: () => this.zone.run(() =>
+          this.router.navigateByUrl('/home', { replaceUrl: true })
+        ),
         error: () => { this.error = true; }
       });
   }
