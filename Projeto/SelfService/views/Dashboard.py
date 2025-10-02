@@ -5,6 +5,7 @@ from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.contrib import messages
 from django.urls import reverse
+from datetime import timedelta
 
 from ..models import Mesa, Pedido
 
@@ -16,10 +17,67 @@ class DashboardView(View):
             return redirect('dashboardGerente')
         return redirect('dashboardAtendente')
 
+
+
+
 @method_decorator(login_required, name='dispatch')
 class DashboardAttendantView(View):
     def get(self, request):
-        return render(request, 'login/DashboardAtendente.html')
+        # Pega os filtros da URL (status e agora o período)
+        status_filtro = request.GET.get('status', 'todos')
+        periodo_filtro = request.GET.get('periodo', 'todos') # Novo filtro
+
+        # Começa a query base, já otimizada
+        pedidos_query = Pedido.objects.select_related('mesa').order_by('-criado_em')
+
+        # 1. Aplica o filtro de STATUS
+        if status_filtro and status_filtro != 'todos':
+            pedidos_query = pedidos_query.filter(status=status_filtro)
+
+        # 2. Aplica o filtro de PERÍODO (Nova Lógica)
+        hoje = timezone.localdate()
+
+        if periodo_filtro == 'hoje':
+            pedidos_query = pedidos_query.filter(criado_em__date=hoje)
+        elif periodo_filtro == 'ontem':
+            ontem = hoje - timedelta(days=1)
+            pedidos_query = pedidos_query.filter(criado_em__date=ontem)
+        elif periodo_filtro == '7dias':
+            sete_dias_atras = hoje - timedelta(days=7)
+            # __gte significa "maior ou igual a" (greater than or equal to)
+            pedidos_query = pedidos_query.filter(criado_em__date__gte=sete_dias_atras)
+
+        # Pega as opções de status para o dropdown do template
+        status_choices = Pedido.STATUS_CHOICES
+
+        context = {
+            'pedidos': pedidos_query[:100], # Aumentei o limite para 100
+            'status_choices': status_choices,
+            'status_filtro_atual': status_filtro,   # Envia o filtro atual de volta
+            'periodo_filtro_atual': periodo_filtro, # Envia o filtro atual de volta
+        }
+        return render(request, 'login/DashboardAtendente.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @method_decorator(login_required, name='dispatch')
 class DashboardManagerView(View):

@@ -10,7 +10,7 @@ from .views.Cardapio import (
 )
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from .views.Profile import MeuPerfilView
-from .views.Historico import HistoricoPedidosView  
+from .views.Historico import HistoricoView 
 
 
 urlpatterns = [
@@ -20,7 +20,7 @@ urlpatterns = [
     path('mesas/<int:mesa_id>/adicionar/', AdicionarPedidoView.as_view(), name='adicionar_pedido'),
 
     # Histórico
-    path("historico/", HistoricoPedidosView.as_view(), name="historico_pedidos"),
+    path('historico/', HistoricoView.as_view(), name='historico'),
     
     # Dashboards
     path('dashboard/atendente/', DashboardAttendantView.as_view(), name='dashboardAtendente'),
@@ -42,7 +42,6 @@ urlpatterns = [
     # Autenticação
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path("historico/", HistoricoPedidosView.as_view(), name="historico_pedidos"),
     # Meu perfil
     path('perfil/', MeuPerfilView.as_view(), name='meu_perfil'),
 ]
