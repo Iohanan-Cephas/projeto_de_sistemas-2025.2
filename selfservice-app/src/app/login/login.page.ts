@@ -108,7 +108,7 @@ export class LoginPage {
         next: () => {
           // ✅ garante que a navegação rode dentro do ciclo do Angular
           this.zone.run(() => {
-            this.router.navigateByUrl('/mesas', { replaceUrl: true });
+            this.router.navigateByUrl('/home', { replaceUrl: true });
           });
         },
         error: () => { this.error = true; }

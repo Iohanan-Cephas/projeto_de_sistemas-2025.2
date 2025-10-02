@@ -9,16 +9,18 @@ type JwtLoginResponse = { access: string; refresh: string };
 export class AuthService {
   private _access: string | null = null;
   private _refresh: string | null = null;
+  private _name: string | null = null; 
 
   get accessToken()  { return this._access; }
   get refreshToken() { return this._refresh; }
+  get currentUserName() { return this._name; } 
 
   constructor(private http: HttpClient) {}
 
   login(username: string, password: string) {
     return this.http.post<JwtLoginResponse>(`${environment.apiBase}/api/auth/login/`, { username, password })
       .pipe(
-        tap(res => { this._access = res.access; this._refresh = res.refresh; }),
+        tap(res => { this._access = res.access; this._refresh = res.refresh; this._name = username; }),
         map(() => true)
       );
   }
