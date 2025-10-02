@@ -3,22 +3,30 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from .models import Profile, Mesa, ItemCardapio, Pedido, ItemPedido
 
-# Inline para editar Profile dentro de User
+# Inline apenas para EDITAR o Profile (o sinal cria automaticamente)
 class ProfileInline(admin.StackedInline):
     model = Profile
     can_delete = False
     verbose_name_plural = 'Perfil'
+    extra = 0  # não oferece form vazio para "criar outro"
 
 class CustomUserAdmin(BaseUserAdmin):
     inlines = (ProfileInline,)
-    list_display = ('username', 'get_role')  # mostra role
+    list_display = ('username', 'get_role')
+    list_select_related = ('profile',)  # evita N+1 na listagem
 
+    # Não mostrar o inline na página de "Add user"
+    def get_inline_instances(self, request, obj=None):
+        if obj is None:
+            return []  # sem inlines no add_view; o sinal cria o Profile no save
+        return super().get_inline_instances(request, obj)
+
+    @admin.display(description='Função', ordering='profile__role')
     def get_role(self, obj):
-        return obj.profile.role
-    get_role.short_description = 'Função'
-    get_role.admin_order_field = 'profile__role'
+        # evita exceção se por algum motivo o profile ainda não existir
+        return getattr(getattr(obj, 'profile', None), 'role', '—')
 
-# Remove User padrão e registra com o custom
+# Substitui o UserAdmin padrão
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 
