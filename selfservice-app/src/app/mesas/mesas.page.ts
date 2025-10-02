@@ -55,6 +55,27 @@ type Mesa = {
       --border-radius: 14px;
       backdrop-filter: blur(6px);
     }
+      .mesa-card .info h2 {
+      color: #fff;           /* 👈 branco */
+      margin: 0 0 4px 0;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .mesa-card .info p {
+      margin: 0;
+      color: var(--ion-color-medium);
+    }
+      ion-header ion-toolbar {
+      --color: #fff;                /* cor dos textos do toolbar */
+}
+
+ion-searchbar {
+  --color: #fff;                               /* texto digitado */
+  --placeholder-color: rgba(255,255,255,.65);  /* placeholder */
+  --icon-color: rgba(255,255,255,.75);         /* ícone da lupa */
+  --clear-button-color: #fff;                  /* botão X do Ionic */
+}
   `],
   template: `
   <ion-header>
@@ -71,8 +92,15 @@ type Mesa = {
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
 
-    <ion-searchbar placeholder="Buscar mesa..." (ionInput)="filter($event)" class="card"
-      style="--background:transparent; margin-bottom:12px;"></ion-searchbar>
+      <ion-searchbar
+        type="text"
+        placeholder="Buscar mesa..."
+        showClearButton="always"
+        (ionInput)="filter($event)"
+        class="card"
+        style="--background:transparent; margin-bottom:12px;">
+      
+      </ion-searchbar>
 
     <ng-container *ngIf="loading; else listTpl">
       <div class="card mesa-card" *ngFor="let s of [1,2,3,4]">
@@ -91,7 +119,7 @@ type Mesa = {
       </div>
 
       <ion-item lines="none" class="card" *ngIf="filtered.length === 0">
-        <ion-label>Nenhuma mesa livre.</ion-label>
+        <ion-label>Nenhuma mesa encontrada.</ion-label>
       </ion-item>
     </ng-template>
   </ion-content>
