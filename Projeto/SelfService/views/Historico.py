@@ -1,25 +1,37 @@
-from django.views import View
+# views.py
+
 from django.shortcuts import render
+from django.views import View
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
+# Importe o seu modelo Pedido
 from ..models import Pedido
 
-class HistoricoPedidosView(View):
+# ... (outras views como DashboardView)
+
+@method_decorator(login_required, name='dispatch')
+class HistoricoView(View):
     def get(self, request):
-        status = request.GET.get("status")
-        q = request.GET.get("q")
+        # Pega o parâmetro 'status' da URL para filtrar (ex: ?status=P)
+        status_filtro = request.GET.get('status', 'todos')
 
-        # começa com todos os pedidos (mais recentes primeiro)
-        pedidos = Pedido.objects.select_related("mesa", "mesa__atendente").order_by("-criado_em")
+        # Começa a query buscando todos os pedidos
+        # Otimização: select_related('mesa') evita queries extras no banco de dados dentro do loop no template
+        pedidos_query = Pedido.objects.select_related('mesa').order_by('-criado_em')
 
-        # filtro por status de pedido
-        if status and status != "todos":
-            pedidos = pedidos.filter(status=status)
+        # Aplica o filtro se um status foi selecionado
+        if status_filtro and status_filtro != 'todos':
+            pedidos_query = pedidos_query.filter(status=status_filtro)
+            
+        # Pega as opções de status do modelo para usar no dropdown do template
+        status_choices = Pedido.STATUS_CHOICES
 
-        # filtro por busca (ex: mesa, id do pedido, atendente)
-        if q:
-            pedidos = pedidos.filter(
-                models.Q(id__icontains=q) |
-                models.Q(mesa__numero__icontains=q) |
-                models.Q(atendente__username__icontains=q)
-            )
+        context = {
+            # Passa os pedidos filtrados para o template (limitado aos 50 mais recentes)
+            'pedidos': pedidos_query[:50], 
+            'status_choices': status_choices,
+        }
+        return render(request, 'login/DashboardAtendente.html', context)
 
-        return render(request, "SelfService/historico.html", {"pedidos": pedidos})
+# ... (outras views)
