@@ -1,37 +1,50 @@
-/*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
- */
+:root {
+  --ion-color-primary: #4c6fff;   /* royal blue */
+  --ion-color-primary-rgb: 76,111,255;
+  --ion-color-secondary: #00d2ff; /* ciano */
+  --ion-color-tertiary: #7b61ff;  /* roxo azulado */
+  --ion-color-success: #22c55e;
+  --ion-color-warning: #f59e0b;
+  --ion-color-danger:  #ef4444;
+  --ion-color-medium:  #8b95a7;
+  --ion-color-dark:    #0b1220;   /* fundo */
+}
 
-/* Core CSS required for Ionic components to work properly */
-@import "@ionic/angular/css/core.css";
+html, body, ion-app, ion-content {
+  --background: linear-gradient(180deg, #0b1220 0%, #101a33 60%, #0b1220 100%);
+  background: var(--background);
+  color-scheme: dark; /* mantém dark elegante */
+}
 
-/* Basic CSS for apps built with Ionic */
-@import "@ionic/angular/css/normalize.css";
-@import "@ionic/angular/css/structure.css";
-@import "@ionic/angular/css/typography.css";
-@import "@ionic/angular/css/display.css";
+/* Cart bonito */
+.card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 30px rgba(0,0,0,.25);
+}
 
-/* Optional CSS utils that can be commented out */
-@import "@ionic/angular/css/padding.css";
-@import "@ionic/angular/css/float-elements.css";
-@import "@ionic/angular/css/text-alignment.css";
-@import "@ionic/angular/css/text-transformation.css";
-@import "@ionic/angular/css/flex-utils.css";
+/* botões “pill” */
+.btn-pill {
+  border-radius: 999px;
+  font-weight: 600;
+}
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
+/* bottom bar */
+.bottom-nav ion-button {
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  --border-radius: 14px;
+  font-weight: 600;
+}
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+.badge-free {
+  background: rgba(34,197,94,.15);
+  color: #22c55e;
+  border: 1px solid rgba(34,197,94,.35);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}

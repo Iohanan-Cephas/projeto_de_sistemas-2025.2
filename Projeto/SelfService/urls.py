@@ -12,6 +12,10 @@ from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from .views.Profile import MeuPerfilView
 from .views.Historico import HistoricoView 
 
+from SelfService.views.ApiViews import RegisterView, MesasLivresView, reservar_mesa, cancelar_reserva
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+
 
 urlpatterns = [
     path('', DashboardView.as_view(), name='dashboard'),
@@ -27,7 +31,7 @@ urlpatterns = [
     path('dashboard/gerente/', DashboardManagerView.as_view(), name='dashboardGerente'),
 
     # APIs
-    path('api-auth/', LoginAPI.as_view(), name='api_login'),
+    #path('api-auth/', LoginAPI.as_view(), name='api_login'),
     path('api/mesas/', APIListarMesas.as_view(), name='api_mesas'),
 
     # Pedidos por mesa
@@ -44,4 +48,15 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     # Meu perfil
     path('perfil/', MeuPerfilView.as_view(), name='meu_perfil'),
+
+
+    #API MOBILE 
+
+    path("api/auth/register/", RegisterView.as_view(), name="api_register"),
+    path("api/auth/login/", TokenObtainPairView.as_view(), name="api_login"),
+    path("api/auth/refresh/", TokenRefreshView.as_view(), name="api_refresh"),
+
+    path("api/mesas/livres/", MesasLivresView.as_view(), name="api_mesas_livres"),
+    path("api/mesas/<int:mesa_id>/reservar/", reservar_mesa, name="api_reservar_mesa"),
+    path("api/mesas/<int:mesa_id>/cancelar/", cancelar_reserva, name="api_cancelar_reserva"),
 ]

@@ -1,70 +1,31 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-
-// Import standalone components do Ionic
 import {
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonButtons,
-  IonButton,
-  IonIcon,
-  IonSegment,
-  IonSegmentButton,
-  IonContent,
-  IonFab,
-  IonFabButton,
-  IonFabList
+  IonContent, IonHeader, IonTitle, IonToolbar,
+  IonButtons, IonMenuButton
 } from '@ionic/angular/standalone';
 
-// Ionicons
-import { addIcons } from 'ionicons';
-import {
-  add,
-  chevronBack,
-  chevronDown,
-  chevronForward,
-  chevronUp,
-  searchOutline,
-  personCircleOutline,
-  alertCircleOutline,
-  checkmarkCircleOutline
-} from 'ionicons/icons';
-
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.page.html',
-  styleUrls: ['./home.page.scss'],
   standalone: true,
+  selector: 'app-home',
   imports: [
     CommonModule,
-    FormsModule,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonButtons,
-    IonButton,
-    IonIcon,
-    IonSegment,
-    IonSegmentButton,
-    IonContent,
+    IonContent, IonHeader, IonTitle, IonToolbar,
+    IonButtons, IonMenuButton
   ],
-})
-export class HomePage {
-  segment: string = 'ocupadas';
+  template: `
+  <ion-header>
+    <ion-toolbar color="transparent">
+      <ion-buttons slot="start">
+        <ion-menu-button autoHide="false"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Página Inicial</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-  constructor() {
-    addIcons({
-      add,
-      chevronBack,
-      chevronForward,
-      chevronUp,
-      chevronDown,
-      searchOutline,
-      personCircleOutline,
-      alertCircleOutline,
-      checkmarkCircleOutline
-    });
-  }
-}
+  <ion-content class="ion-padding">
+    <!-- espaço reservado para conteúdo futuro -->
+  </ion-content>
+  `
+})
+export class HomePage {}

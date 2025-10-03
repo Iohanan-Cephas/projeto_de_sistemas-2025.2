@@ -17,7 +17,7 @@ __pycache__/
 .idea/
 
 # Banco de dados local
-#db.sqlite3
+db.sqlite3
 
 # Arquivos de migração (se não quiser versionar)
 */migrations/__pycache__/
