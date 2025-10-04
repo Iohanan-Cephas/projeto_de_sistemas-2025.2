@@ -5,72 +5,104 @@
 
 {% block content %}
 <div class="container-xxl">
+    <div class="container-fluid mt-4">
+        <div class="card card-glass">
+            <div class="card-body">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+                    <h2 class="h4 mb-0">Pedidos Recentes</h2>
 
+                    <div class="d-flex flex-wrap align-items-center gap-3">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <a href="?periodo=hoje&status={{ status_filtro_atual }}" class="btn {% if periodo_filtro_atual == 'hoje' %}btn-primary{% else %}btn-outline-primary{% endif %}">Hoje</a>
+                            <a href="?periodo=ontem&status={{ status_filtro_atual }}" class="btn {% if periodo_filtro_atual == 'ontem' %}btn-primary{% else %}btn-outline-primary{% endif %}">Ontem</a>
+                            <a href="?periodo=7dias&status={{ status_filtro_atual }}" class="btn {% if periodo_filtro_atual == '7dias' %}btn-primary{% else %}btn-outline-primary{% endif %}">7 dias</a>
+                            <a href="?periodo=todos&status={{ status_filtro_atual }}" class="btn {% if periodo_filtro_atual == 'todos' or not periodo_filtro_atual %}btn-primary{% else %}btn-outline-primary{% endif %}">Todos</a>
+                        </div>
 
-<div class="container-fluid mt-4">
-    <div class="card card-glass">
-        <div class="card-body">
-            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
-    <h2 class="h4 mb-0">Pedidos Recentes</h2>
+                        <form method="get" id="status-filter-form">
+                            <input type="hidden" name="periodo" value="{{ periodo_filtro_atual }}">
+                            <select name="status" class="form-select form-select-sm w-auto" onchange="document.getElementById('status-filter-form').submit()">
+                                <option value="todos" {% if status_filtro_atual == 'todos' %}selected{% endif %}>Status: todos</option>
+                                {% for value, display in status_choices %}
+                                    <option value="{{ value }}" {% if status_filtro_atual == value %}selected{% endif %}>{{ display }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </div>
+                </div>
 
-    <div class="d-flex flex-wrap align-items-center gap-3">
-        
-        <div class="btn-group btn-group-sm" role="group">
-            <a href="?periodo=hoje&status={{ status_filtro_atual }}" class="btn {% if periodo_filtro_atual == 'hoje' %}btn-primary{% else %}btn-outline-primary{% endif %}">Hoje</a>
-            <a href="?periodo=ontem&status={{ status_filtro_atual }}" class="btn {% if periodo_filtro_atual == 'ontem' %}btn-primary{% else %}btn-outline-primary{% endif %}">Ontem</a>
-            <a href="?periodo=7dias&status={{ status_filtro_atual }}" class="btn {% if periodo_filtro_atual == '7dias' %}btn-primary{% else %}btn-outline-primary{% endif %}">7 dias</a>
-        <a href="?periodo=todos&status={{ status_filtro_atual }}" class="btn {% if periodo_filtro_atual == 'todos' or not periodo_filtro_atual %}btn-primary{% else %}btn-outline-primary{% endif %}">Todos</a>
-          </div>
+                <!-- Versão desktop (tabela) -->
+                <div class="table-responsive d-none d-md-block">
+                    <table class="table table-dark align-middle mb-0">
+                        <thead>
+                            <tr class="text-secondary">
+                                <th>#</th>
+                                <th>Mesa</th>
+                                <th>Itens</th>
+                                <th class="text-nowrap">Total</th>
+                                <th>Status Pedido</th>
+                                <th class="text-nowrap">Criado em</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pedido in pedidos %}
+                            <tr>
+                                <td class="fw-semibold">#{{ pedido.id }}</td>
+                                <td>Mesa {{ pedido.mesa.numero }}</td>
+                                <td>
+                                    {% for item in pedido.itens.all %}
+                                        {{ item.quantidade }}x {{ item.item.nome }}<br>
+                                        {% if not forloop.last %} {% endif %}
+                                    {% empty %}
+                                        Nenhum item
+                                    {% endfor %}
+                                </td>
+                                <td class="text-nowrap">R$ {{ pedido.total|floatformat:2 }}</td>
+                                <td>
+                                    <span class="badge {% if pedido.status == 'P' %}text-bg-warning{% elif pedido.status == 'E' %}text-bg-info{% elif pedido.status == 'C' %}text-bg-success{% elif pedido.status == 'F' %}text-bg-primary{% else %}text-bg-secondary{% endif %}">
+                                        {{ pedido.get_status_display }}
+                                    </span>
+                                </td>
+                                <td class="text-nowrap">{{ pedido.criado_em|date:"d/m/Y, H:i" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center text-secondary py-4">Nenhum pedido encontrado.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
 
-        <form method="get" id="status-filter-form">
-            <input type="hidden" name="periodo" value="{{ periodo_filtro_atual }}">
-            
-            <select name="status" class="form-select form-select-sm w-auto" onchange="document.getElementById('status-filter-form').submit()">
-                <option value="todos" {% if status_filtro_atual == 'todos' %}selected{% endif %}>Status: todos</option>
-                {% for value, display in status_choices %}
-                    <option value="{{ value }}" {% if status_filtro_atual == value %}selected{% endif %}>{{ display }}</option>
-                {% endfor %}
-            </select>
-        </form>
-    </div>
-</div>
-
-<div class="table-responsive">
-                <table class="table table-dark align-middle mb-0">
-                    <thead>
-                        <tr class="text-secondary">
-                            <th>#</th>
-                            <th>Mesa</th>
-                            <th>Itens</th>
-                            <th class="text-nowrap">Total</th>
-                            <th>Status Pedido</th>
-                            <th class="text-nowrap">Criado em</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for pedido in pedidos %}
-                        <tr>
-                            <td class="fw-semibold">#{{ pedido.id }}</td>
-                            <td>Mesa {{ pedido.mesa.numero }}</td>
-                            <td>{{ pedido.itens.count }}</td>
-                            <td class="text-nowrap">R$ {{ pedido.total|floatformat:2 }}</td>
-                            <td>
-                                <span class="badge {% if pedido.status == 'P' %}text-bg-warning{% elif pedido.status == 'E' %}text-bg-info{% elif pedido.status == 'C' %}text-bg-success{% elif pedido.status == 'F' %}text-bg-primary{% else %}text-bg-secondary{% endif %}">
-                                    {{ pedido.get_status_display }}
-                                </span>
-                            </td>
-                            <td class="text-nowrap">{{ pedido.criado_em|date:"d/m/Y, H:i" }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="6" class="text-center text-secondary py-4">Nenhum pedido encontrado.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                <!-- Versão mobile (cards) -->
+                <div class="d-block d-md-none">
+                    {% for pedido in pedidos %}
+                        <div class="card mb-3 bg-dark text-white">
+                            <div class="card-body p-3">
+                                <h6 class="fw-bold mb-1">#{{ pedido.id }} • Mesa {{ pedido.mesa.numero }}</h6>
+                                <p class="mb-1"><strong>Itens:</strong> 
+                                    {% for item in pedido.itens.all %}
+                                        {{ item.quantidade }}x {{ item.item_cardapio.nome }}{% if not forloop.last %}, {% endif %}
+                                    {% empty %}
+                                        Nenhum item
+                                    {% endfor %}
+                                </p>
+                                <p class="mb-1"><strong>Total:</strong> R$ {{ pedido.total|floatformat:2 }}</p>
+                                <p class="mb-1">
+                                    <strong>Status:</strong>
+                                    <span class="badge {% if pedido.status == 'P' %}text-bg-warning{% elif pedido.status == 'E' %}text-bg-info{% elif pedido.status == 'C' %}text-bg-success{% elif pedido.status == 'F' %}text-bg-primary{% else %}text-bg-secondary{% endif %}">
+                                        {{ pedido.get_status_display }}
+                                    </span>
+                                </p>
+                                <small class="text-muted">Criado em {{ pedido.criado_em|date:"d/m/Y, H:i" }}</small>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="text-center text-secondary py-4">Nenhum pedido encontrado.</div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
-

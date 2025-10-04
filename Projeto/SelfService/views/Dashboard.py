@@ -6,8 +6,9 @@ from django.utils import timezone
 from django.contrib import messages
 from django.urls import reverse
 from datetime import timedelta
+from django.db.models import Prefetch
 
-from ..models import Mesa, Pedido
+from ..models import Mesa, Pedido, ItemPedido
 
 @method_decorator(login_required, name='dispatch')
 class DashboardView(View):
@@ -18,25 +19,29 @@ class DashboardView(View):
         return redirect('dashboardAtendente')
 
 
-
-
 @method_decorator(login_required, name='dispatch')
 class DashboardAttendantView(View):
     def get(self, request):
-        # Pega os filtros da URL (status e agora o período)
+        # Pega filtros da URL
         status_filtro = request.GET.get('status', 'todos')
-        periodo_filtro = request.GET.get('periodo', 'todos') # Novo filtro
+        periodo_filtro = request.GET.get('periodo', 'todos')
 
-        # Começa a query base, já otimizada
-        pedidos_query = Pedido.objects.select_related('mesa').order_by('-criado_em')
+        # Query base com prefetch dos itens e cardápio
+        pedidos_query = (
+            Pedido.objects
+            .select_related('mesa')
+            .prefetch_related(
+                Prefetch("itens", queryset=ItemPedido.objects.select_related("item"))
+            )
+            .order_by('-criado_em')
+        )
 
-        # 1. Aplica o filtro de STATUS
+        # Filtro por STATUS
         if status_filtro and status_filtro != 'todos':
             pedidos_query = pedidos_query.filter(status=status_filtro)
 
-        # 2. Aplica o filtro de PERÍODO (Nova Lógica)
+        # Filtro por PERÍODO
         hoje = timezone.localdate()
-
         if periodo_filtro == 'hoje':
             pedidos_query = pedidos_query.filter(criado_em__date=hoje)
         elif periodo_filtro == 'ontem':
@@ -44,21 +49,17 @@ class DashboardAttendantView(View):
             pedidos_query = pedidos_query.filter(criado_em__date=ontem)
         elif periodo_filtro == '7dias':
             sete_dias_atras = hoje - timedelta(days=7)
-            # __gte significa "maior ou igual a" (greater than or equal to)
             pedidos_query = pedidos_query.filter(criado_em__date__gte=sete_dias_atras)
 
-        # Pega as opções de status para o dropdown do template
         status_choices = Pedido.STATUS_CHOICES
 
         context = {
-            'pedidos': pedidos_query[:100], # Aumentei o limite para 100
+            'pedidos': pedidos_query[:100],
             'status_choices': status_choices,
-            'status_filtro_atual': status_filtro,   # Envia o filtro atual de volta
-            'periodo_filtro_atual': periodo_filtro, # Envia o filtro atual de volta
+            'status_filtro_atual': status_filtro,
+            'periodo_filtro_atual': periodo_filtro,
         }
         return render(request, 'login/DashboardAtendente.html', context)
-
-
 
 
 

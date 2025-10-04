@@ -10,7 +10,7 @@ class Pedido(models.Model):
 
     mesa = models.ForeignKey('Mesa', on_delete=models.CASCADE, related_name='pedidos')
     itens = models.ManyToManyField('ItemCardapio', through='ItemPedido')
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='E')
     criado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
 
