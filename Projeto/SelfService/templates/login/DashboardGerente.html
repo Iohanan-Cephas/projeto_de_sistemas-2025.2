@@ -6,15 +6,10 @@
 
 {% block content %}
 
-<!-- Ações rápidas -->
-<div class="d-flex justify-content-end gap-2 mb-3">
-  <a href="{% url 'cardapio_list' %}" class="btn btn-outline-light btn-sm">
-    <i class="bi bi-gear me-2"></i>Gerir cardápio
-  </a>
-  <a href="{% url 'pedidos_por_mesa' %}" class="btn btn-outline-light btn-sm">
-    <i class="bi bi-receipt me-2"></i>Pedidos por mesa
-  </a>
-</div>
+<!-- Atalho para lista de atendentes -->
+<a href="{% url 'lista_atendentes' %}" class="btn btn-primary mb-3">
+  <i class="bi bi-people me-2"></i>Gerenciar Atendentes
+</a>
 
 <!-- Tabs -->
 <ul class="nav nav-tabs nav-fill mb-4 card-glass rounded-3 p-1" role="tablist" style="border:none;">

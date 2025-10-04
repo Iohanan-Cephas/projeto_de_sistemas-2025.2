@@ -12,6 +12,7 @@ from .views.Cardapio import (
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from .views.Profile import MeuPerfilView
 from .views.Historico import HistoricoView 
+from .views.Dashboard import AttendantsListView
 
 from SelfService.views.ApiViews import RegisterView, MesasLivresView, reservar_mesa, cancelar_reserva
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -30,6 +31,7 @@ urlpatterns = [
     # Dashboards
     path('dashboard/atendente/', DashboardAttendantView.as_view(), name='dashboardAtendente'),
     path('dashboard/gerente/', DashboardManagerView.as_view(), name='dashboardGerente'),
+    path('dashboard/atendentes/', AttendantsListView.as_view(), name='lista_atendentes'),
 
     # APIs
     #path('api-auth/', LoginAPI.as_view(), name='api_login'),
