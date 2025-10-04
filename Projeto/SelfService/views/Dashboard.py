@@ -7,8 +7,9 @@ from django.contrib import messages
 from django.urls import reverse
 from datetime import timedelta
 from django.db.models import Prefetch
+from django.contrib.auth.models import User
 
-from ..models import Mesa, Pedido, ItemPedido
+from ..models import Mesa, Pedido, ItemPedido, Profile
 
 @method_decorator(login_required, name='dispatch')
 class DashboardView(View):
@@ -22,6 +23,10 @@ class DashboardView(View):
 @method_decorator(login_required, name='dispatch')
 class DashboardAttendantView(View):
     def get(self, request):
+        role = request.session.get('role', 'ATENDENTE')
+        if role != 'ATENDENTE':
+            return redirect('dashboardGerente')
+
         # Pega filtros da URL
         status_filtro = request.GET.get('status', 'todos')
         periodo_filtro = request.GET.get('periodo', 'todos')
@@ -62,27 +67,13 @@ class DashboardAttendantView(View):
         return render(request, 'login/DashboardAtendente.html', context)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @method_decorator(login_required, name='dispatch')
 class DashboardManagerView(View):
     def get(self, request):
+        role = request.session.get('role', 'ATENDENTE')
+        if role != 'GERENTE':
+            return redirect('dashboardAtendente')
+
         tab = request.GET.get('tab', 'today')
 
         hoje = timezone.localdate()
@@ -137,3 +128,16 @@ class DashboardManagerView(View):
 
         messages.error(request, "Ação inválida.")
         return redirect('dashboardGerente')
+
+
+@method_decorator(login_required, name='dispatch')
+class AttendantsListView(View):
+    def get(self, request):
+        role = request.session.get('role', 'ATENDENTE')
+        if role != 'GERENTE':
+            return redirect('dashboardAtendente')
+        atendentes = Profile.objects.filter(role='ATENDENTE').select_related('user')
+        context = {
+            'atendentes': atendentes,
+        }
+        return render(request, 'login/ListaAtendentes.html', context)

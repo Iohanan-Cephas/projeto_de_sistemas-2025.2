@@ -14,6 +14,8 @@ class Profile(models.Model):
         related_name='profile',          # acesso reverso: user.profile
         related_query_name='profile',
     )
+
+    matricula = models.CharField(max_length=8, unique=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='ATENDENTE')
 
     def __str__(self):
