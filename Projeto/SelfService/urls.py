@@ -2,8 +2,9 @@ from django.urls import path
 from .views import (
     ListaMesasView, DetalheMesaView, AdicionarPedidoView,
     LoginView, LogoutView, DashboardView, DashboardAttendantView, DashboardManagerView,
-    LoginAPI, APIListarMesas,
+    LoginAPI, APIListarMesas, Pagamento,
 )
+
 from .views.Pedidos import PedidosPorMesaView
 from .views.Cardapio import (
     CardapioListView, CardapioCreateView, CardapioUpdateView, CardapioDeleteView
@@ -14,8 +15,8 @@ from .views.Historico import HistoricoView
 
 from SelfService.views.ApiViews import RegisterView, MesasLivresView, reservar_mesa, cancelar_reserva
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
-
+from .views.Pagamento import fechar_conta
+from .views.Pagamento import fechar_conta, finalizar_conta
 
 urlpatterns = [
     path('', DashboardView.as_view(), name='dashboard'),
@@ -34,9 +35,17 @@ urlpatterns = [
     #path('api-auth/', LoginAPI.as_view(), name='api_login'),
     path('api/mesas/', APIListarMesas.as_view(), name='api_mesas'),
 
+
+
+    
     # Pedidos por mesa
     path('pedidos/por-mesa/', PedidosPorMesaView.as_view(), name='pedidos_por_mesa'),
-
+    
+    # Fechar conta
+    path("fechar_conta/<int:mesa_id>/", fechar_conta, name="fechar_conta"),
+    path("finalizar_conta/<int:mesa_id>/", finalizar_conta, name="finalizar_conta"),
+    
+    
     # Cardápio (CRUD)
     path('cardapio/', CardapioListView.as_view(), name='cardapio_list'),
     path('cardapio/novo/', CardapioCreateView.as_view(), name='cardapio_create'),
