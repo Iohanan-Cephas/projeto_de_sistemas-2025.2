@@ -10,21 +10,21 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       {% for it in itens %}
-        <label class="border rounded-lg p-3 flex items-center justify-between">
-          <div>
-            <div class="font-medium">{{ it.nome }}</div>
-            <div class="text-sm text-neutral-500">R$ {{ it.preco }}</div>
-          </div>
-          <input type="number" min="0" value="0" name="item_{{ it.id }}" class="w-20 px-2 py-1 border rounded">
-        </label>
+      <label class="border rounded-lg p-3 flex items-center justify-between">
+        <div>
+          <div class="font-medium">{{ it.nome }}</div>
+          <div class="text-sm text-neutral-500">R$ {{ it.preco }}</div>
+        </div>
+        <input type="number" min="1" value="1" name="item_{{ it.id }}" class="w-20 px-2 py-1 border rounded">
+      </label>
       {% empty %}
-        <p class="text-neutral-500">Não há itens cadastrados no cardápio.</p>
+      <p class="text-neutral-500">Não há itens cadastrados no cardápio.</p>
       {% endfor %}
     </div>
 
     <div class="flex justify-end gap-2">
-      <a href="{% url 'detalhe_mesa' mesa.id %}" class="px-3 py-2 rounded-lg border">Cancelar</a>
-      <button class="px-3 py-2 rounded-lg bg-neutral-900 text-white">Criar pedido</button>
+      <a href="{% url 'detalhe_mesa' mesa.id %}" class="btn btn-sm btn-outline-light">Cancelar</a>
+      <button class="btn btn-sm btn-outline-light">Criar pedido</button>
     </div>
   </form>
 </section>
