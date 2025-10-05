@@ -1,0 +1,34 @@
+{% extends "Base.html" %}
+{% block title %}Editar Pedido #{{ pedido.id }}{% endblock %}
+{% block header_title %}Editar Pedido #{{ pedido.id }} (Mesa {{ pedido.mesa.numero }}){% endblock %}
+
+{% block content %}
+<section class="max-w-4xl mx-auto px-4 py-6">
+    <form method="post" class="space-y-4 border rounded-xl p-4">
+        {% csrf_token %}
+        <p class="text-sm text-neutral-600">
+            Altere as quantidades ou defina como 0 para remover um item do pedido.
+        </p>
+
+        <div class="space-y-3">
+            {% for ip in pedido.itens_pedido.all %}
+            <div class="border rounded-lg p-3 flex items-center justify-between">
+                <div>
+                    <div class="font-medium">{{ ip.item.nome }}</div>
+                    <div class="text-sm text-neutral-500">R$ {{ ip.item.preco }}</div>
+                </div>
+                <input type="number" min="0" value="{{ ip.quantidade }}" name="item_{{ ip.id }}"
+                    class="w-20 px-2 py-1 border rounded" aria-label="Quantidade de {{ ip.item.nome }}">
+            </div>
+            {% empty %}
+            <p class="text-neutral-500">Este pedido não possui itens.</p>
+            {% endfor %}
+        </div>
+
+        <div class="flex justify-end gap-2 pt-4">
+            <a href="{% url 'detalhe_mesa' pedido.mesa.id %}" class="btn btn-sm btn-outline-light">Cancelar</a>
+            <button type="submit" class="btn btn-sm btn-outline-light">Salvar Alterações</button>
+        </div>
+    </form>
+</section>
+{% endblock %}
