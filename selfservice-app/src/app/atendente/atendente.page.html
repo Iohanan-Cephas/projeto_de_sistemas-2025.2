@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Atendente</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="load()"><ion-icon [icon]="icons.refresh"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="center">
+
+  <div class="head">
+    <div class="brand">
+      <div class="logo">SS</div>
+      <div>
+        <div class="title">Mesas</div>
+        <ion-text class="muted">{{ filtered().length }} exibidas</ion-text>
+      </div>
+    </div>
+  </div>
+
+  <ion-searchbar
+    [(ngModel)]="q"
+    (ionInput)="onFilterChange()"
+    debounce="200"
+    placeholder="Buscar mesa (ex.: 05)">
+  </ion-searchbar>
+
+  <ion-segment [(ngModel)]="segment" (ionChange)="onFilterChange()" mode="ios">
+    <ion-segment-button value="ALL"><ion-label>Todas</ion-label></ion-segment-button>
+    <ion-segment-button value="LIVRE"><ion-label>Livres</ion-label></ion-segment-button>
+    <ion-segment-button value="OCUPADA"><ion-label>Ocupadas</ion-label></ion-segment-button>
+    <ion-segment-button value="RESERVADA"><ion-label>Reservadas</ion-label></ion-segment-button>
+  </ion-segment>
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- skeleton -->
+  <div class="grid" *ngIf="loading()">
+    <div class="card" *ngFor="let s of skeleton">
+      <ion-skeleton-text [animated]="true" style="width:60%; height:18px"></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" style="width:40%; height:18px"></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" style="width:100%; height:36px; border-radius:10px"></ion-skeleton-text>
+    </div>
+  </div>
+
+  <!-- grid de mesas -->
+  <div class="grid" *ngIf="!loading()">
+    <div class="card" *ngFor="let m of filtered()">
+      <div class="row">
+        <div class="code">Mesa {{ m.numero ?? (m.code || m.id) }}</div>
+        <ion-badge [attr.status]="m.status">{{ m.status }}</ion-badge>
+      </div>
+      <ion-note class="muted">Última ação: {{ now }}</ion-note>
+      <ion-button class="toggle" expand="block" (click)="toggle(m)">
+        <ion-icon slot="start" [icon]="icons.swap"></ion-icon>
+        {{ m.status === 'LIVRE' ? 'Ocupar' : 'Liberar' }}
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- FAB -->
+  <ion-fab horizontal="end" vertical="bottom">
+    <ion-fab-button (click)="openQr()">
+      <ion-icon [icon]="icons.qr"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

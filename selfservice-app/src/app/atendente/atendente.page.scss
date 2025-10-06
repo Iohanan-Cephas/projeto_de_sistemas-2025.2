@@ -1,0 +1,79 @@
+ion-content.center::part(scroll){
+  min-height: 100dvh;
+  padding: 16px;
+}
+
+/* Header/brand */
+.head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.brand{ display:flex; align-items:center; gap:10px; }
+.logo{
+  width:36px; height:36px; border-radius:10px;
+  display:grid; place-items:center; color:#fff; font-weight:800;
+  background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-tertiary));
+}
+.title{ 
+  font-weight:800; 
+  color: #fff; /* CORREÇÃO: Título 'Mesas' agora é branco */
+}
+.muted{ color: #C0C0C0; }
+
+/* Barra de Pesquisa */
+ion-searchbar {
+  --color: #fff; 
+  --icon-color: #C0C0C0; 
+  --placeholder-color: #C0C0C0; 
+  --background: #333; 
+  border-radius: 12px;
+}
+
+/* Segment (CORREÇÃO: Garantindo o contraste do texto selecionado) */
+ion-segment{
+  margin: 6px 0 10px;
+  --indicator-color: var(--ion-color-primary); 
+  --background: #333; 
+  border-radius: 12px;
+}
+
+ion-segment-button {
+  --color: #C0C0C0; /* Texto das opções não selecionadas */
+  --color-checked: #fff; /* Texto da opção selecionada */
+}
+
+/* CORREÇÃO ESPECÍFICA: Garante que o indicador do botão "Todas" não seja branco no branco */
+ion-segment-button[value="ALL"] {
+    --indicator-color-checked: var(--ion-color-dark); 
+}
+
+/* Grid de cards */
+.grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap:10px;
+}
+@media (min-width:480px){ .grid{ grid-template-columns: repeat(3, minmax(0,1fr)); } }
+@media (min-width:720px){ .grid{ grid-template-columns: repeat(4, minmax(0,1fr)); } }
+
+.card{
+  border-radius: 14px;
+  padding: 14px;
+  background: var(--ion-item-background, #fff);
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  display:flex; flex-direction:column; gap:8px;
+}
+.row{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.code{ font-weight:800; font-size:16px; }
+
+.toggle{
+  --background: var(--ion-color-dark);
+  --color:#fff;
+  height:36px; border-radius:10px;
+}
+
+/* badges por status */
+ion-badge[status="LIVRE"]{ --background: var(--ion-color-success); }
+ion-badge[status="OCUPADA"]{ --background: var(--ion-color-danger); }
+ion-badge[status="RESERVADA"]{ 
+  --background: var(--ion-color-warning); 
+  color: #222; 
+  padding: 3px 8px; 
+}
