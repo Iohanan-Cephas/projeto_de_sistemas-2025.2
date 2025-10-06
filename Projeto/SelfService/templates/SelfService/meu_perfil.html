@@ -1,0 +1,70 @@
+{% extends "Base.html" %}
+{% block title %}Meu perfil{% endblock %}
+{% block header_title %}Meu perfil{% endblock %}
+
+{% block content %}
+<div class="container-xxl">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+
+      <div class="card card-glass mb-3">
+        <div class="card-body">
+
+          <!-- Cabeçalho com avatar + papel -->
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <span class="avatar fs-5">
+              {{ user_info.username|default:"U"|slice:":2"|upper }}
+            </span>
+            <div>
+              <div class="h4 mb-0">{{ user_info.username }}</div>
+              {% if user_info.role == "GERENTE" %}
+                <span class="badge text-bg-primary">GERENTE</span>
+              {% elif user_info.role == "ATENDENTE" %}
+                <span class="badge text-bg-info">ATENDENTE</span>
+              {% else %}
+                <span class="badge text-bg-secondary">{{ user_info.role|default:"—" }}</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Dados em grid -->
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <div class="text-secondary small">Nome</div>
+              <div class="fw-semibold">{{ user_info.first_name|default:"—" }}</div>
+            </div>
+            <div class="col-sm-6">
+              <div class="text-secondary small">Sobrenome</div>
+              <div class="fw-semibold">{{ user_info.last_name|default:"—" }}</div>
+            </div>
+
+            <div class="col-12">
+              <div class="text-secondary small">E-mail</div>
+              <div class="fw-semibold">{{ user_info.email|default:"—" }}</div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="text-secondary small">Criado em</div>
+              <div class="fw-semibold">{{ user_info.date_joined|date:"d/m/Y, H:i" }}</div>
+            </div>
+            <div class="col-sm-6">
+              <div class="text-secondary small">Último acesso</div>
+              <div class="fw-semibold">
+                {{ user_info.last_login|default:"—"|date:"d/m/Y, H:i" }}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end">
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-light">
+          <i class="bi bi-arrow-left me-1"></i>Voltar
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

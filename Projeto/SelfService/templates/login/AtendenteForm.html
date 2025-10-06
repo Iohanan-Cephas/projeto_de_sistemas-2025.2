@@ -1,0 +1,58 @@
+{% extends "Base.html" %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block header_title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="container-xxl">
+    <div class="card card-glass">
+        <div class="card-body">
+            <form method="post" class="vstack gap-3">
+                {% csrf_token %}
+
+                <h3 class="h5">Dados do Usuário</h3>
+                {% with form=user_form|default:form %}
+                <div class="form-floating">
+                    <input type="text" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}"
+                        class="form-control" placeholder="Nome" value="{{ form.first_name.value|default:'' }}" required>
+                    <label for="{{ form.first_name.id_for_label }}">Nome</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}"
+                        class="form-control" placeholder="Sobrenome" value="{{ form.last_name.value|default:'' }}"
+                        required>
+                    <label for="{{ form.last_name.id_for_label }}">Sobrenome</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
+                        class="form-control" placeholder="Usuário (para login)"
+                        value="{{ form.username.value|default:'' }}" required>
+                    <label for="{{ form.username.id_for_label }}">Usuário (para login)</label>
+                </div>
+                {% if form.password %}
+                <div class="form-floating">
+                    <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}"
+                        class="form-control" placeholder="Senha" required>
+                    <label for="{{ form.password.id_for_label }}">Senha</label>
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <h3 class="h5 mt-3">Dados do Perfil</h3>
+                {% with form=profile_form|default:form %}
+                <div class="form-floating">
+                    <input type="text" name="{{ form.matricula.name }}" id="{{ form.matricula.id_for_label }}"
+                        class="form-control" placeholder="Matrícula" value="{{ form.matricula.value|default:'' }}"
+                        required>
+                    <label for="{{ form.matricula.id_for_label }}">Matrícula</label>
+                </div>
+                {% endwith %}
+
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <a href="{% url 'lista_atendentes' %}" class="btn btn-outline-light">Cancelar</a>
+                    <button type="submit" class="btn btn-light">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "Base.html" %}
+{% block title %}Mesa {{ mesa.numero }}{% endblock %}
+{% block header_title %}Mesa {{ mesa.numero }}{% endblock %}
+
+{% block content %}
+<div class="container-xxl">
+
+  <!-- Cabeçalho -->
+  <div class="d-flex flex-wrap justify-content-between align-items-end mb-3">
+    <div class="d-flex align-items-center gap-2">
+      <h2 class="h3 mb-0">Mesa {{ mesa.numero }}</h2>
+      {% if mesa.ocupada %}
+      <span class="badge text-bg-warning">Ocupada</span>
+      {% elif mesa.reservada %}
+      <span class="badge text-bg-info">Reservada</span>
+      {% else %}
+      <span class="badge text-bg-success">Livre</span>
+      {% endif %}
+    </div>
+    <div class="text-secondary small">Capacidade: {{ mesa.capacidade }}</div>
+  </div>
+
+  <!-- Ações -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="{% url 'adicionar_pedido' mesa.id %}" class="btn btn-light">
+      <i class="bi bi-plus-lg me-2"></i>Novo pedido
+    </a>
+    <a href="{% url 'lista_mesas' %}" class="btn btn-outline-light">
+      <i class="bi bi-arrow-left me-1"></i>Voltar para mesas
+    </a>
+  </div>
+
+  <!-- Pedidos da mesa -->
+  <div class="card card-glass">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-dark align-middle mb-0">
+          <thead>
+            <tr class="text-secondary">
+              <th>#</th>
+              <th>Status</th>
+              <th>Criado em</th>
+              <th>Itens</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in pedidos %}
+            <tr>
+              <td class="fw-semibold">Pedido {{ p.id }}</td>
+              <td>
+                <span class="badge
+                    {% if p.status == 'P' %}text-bg-warning
+                    {% elif p.status == 'E' %}text-bg-info
+                    {% elif p.status == 'C' %}text-bg-success
+                    {% else %}text-bg-primary{% endif %}">
+                  {{ p.get_status_display }}
+                </span>
+              </td>
+              <td class="text-nowrap">{{ p.criado_em|date:"d/m/Y, H:i" }}</td>
+              <td>
+                {% with itens=p.itens_pedido.all %}
+                {% if itens %}
+                <ul class="small mb-0 ps-3">
+                  {% for ip in itens %}
+                  <li>{{ ip.quantidade }}× {{ ip.item.nome }}</li>
+                  {% endfor %}
+                </ul>
+                {% else %}
+                <span class="text-secondary small">—</span>
+                {% endif %}
+                {% endwith %}
+              </td>
+              <td class="text-end">
+                <a href="{% url 'editar_pedido' p.id %}" class="btn btn-sm btn-outline-light">
+                  Editar
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="4" class="text-center text-secondary py-4">
+                Sem pedidos para esta mesa.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

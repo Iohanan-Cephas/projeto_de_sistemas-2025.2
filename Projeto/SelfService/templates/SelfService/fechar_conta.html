@@ -1,0 +1,69 @@
+{% extends "Base.html" %}
+
+{% block title %}Fechar Conta{% endblock %}
+
+{% block content %}
+<div class="container my-5 d-flex justify-content-center">
+    <div class="col-12 col-md-8 col-lg-5">
+
+        <div class="card" style="background-color: #1c1e2d; border-radius: 12px; border: 1px solid #3a3f51;">
+            
+            <div class="card-body p-4 text-light">
+
+                <div>
+                    <p class="text-secondary text-uppercase small mb-0">Conta da Mesa</p>
+                    <h1 class="display-1 fw-bold my-0" style="line-height: 1;">{{ mesa.numero }}</h1>
+                </div>
+
+                <hr class="my-4" style="border-color: #3a3f51;">
+
+                <div>
+                    <p class="text-secondary text-uppercase small mb-2">Itens Consumidos</p>
+                    
+                    {% for item in itens_da_conta %}
+                        <div class="d-flex justify-content-between align-items-center py-2">
+                            <div>
+                               <span class="d-block">{{ item.quantidade }}x {{ item.item.nome }}</span>
+                                <span class="text-secondary small">pedido às {{ item.pedido.criado_em|time:"H:i" }}</span>
+                            </div>
+                            <span class="fw-bold">R$ {{ item.subtotal|floatformat:2 }}</span>
+                        </div>
+                        {% if not forloop.last %}<hr class="my-1" style="border-color: #303443;">{% endif %}
+                    {% empty %}
+                        <p>Nenhum item encontrado.</p>
+                    {% endfor %}
+                </div>
+
+                <hr class="my-4" style="border-color: #3a3f51;">
+
+                <div>
+                    <div class="d-flex justify-content-between align-items-center py-1">
+                        <span class="text-secondary">Subtotal</span>
+                        <span>R$ {{ total|floatformat:2 }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center py-1">
+                        <span class="text-secondary">Taxa de Serviço (10%)</span>
+                        <span>R$ {{ taxa_servico|floatformat:2 }}</span>
+                    </div>
+                     <div class="d-flex justify-content-between align-items-center pt-3">
+                        <span class="fw-bold h5">TOTAL</span>
+                        <span class="fw-bold h5">R$ {{ total_com_taxa|floatformat:2 }}</span>
+                    </div>
+                </div>
+                <div class="mt-4">
+    <form action="{% url 'finalizar_conta' mesa.id %}" method="post">
+        {% csrf_token %} <button type="submit" class="btn btn-lg w-100 fw-bold py-3" style="background-color: #e84a5f; color: white; border-radius: 8px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill me-2" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>
+            Finalizar e Pagar
+        </button>
+    </form>
+     <div class="text-center mt-2">
+        <a href="{% url 'lista_mesas' %}" class="btn btn-link btn-sm text-secondary">Voltar</a>
+    </div>
+</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
