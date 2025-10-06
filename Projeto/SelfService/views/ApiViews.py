@@ -5,12 +5,8 @@ from django.db import transaction
 from django.utils import timezone
 
 from ..models.Mesa import Mesa
-from ..models.Pedido import Pedido
 from ..serializers import MesaSerializer, RegisterSerializer
-from ..serializers import PedidosSerializer
-from ..serializers import ItemCardapioSerializer
 from rest_framework.permissions import AllowAny
-from rest_framework.permissions import IsAuthenticated
 
 # --- AUTH ---
 class RegisterView(generics.CreateAPIView):
@@ -57,24 +53,3 @@ def cancelar_reserva(request, mesa_id):
         return Response({"detail": "Reserva não encontrada."}, status=404)
     mesa.cancelar_reserva()
     return Response({"detail": "Reserva cancelada."}, status=200)
-
-# --- PEDIDOS ---
-class Pedidos(generics.ListAPIView):
-    serializer_class = PedidosSerializer
-    permission_classes = [AllowAny]
-
-    def get_queryset(self):
-        mesa_id = self.request.query_params.get('mesa_id')
-        if not mesa_id:
-            return Pedido.objects.all()  # Retorna todos os pedidos se mesa_id não for fornecido
-        return Pedido.objects.filter(mesa_id=mesa_id)
-
-
-# --- CARDÁPIO API ---
-class CardapioItemsView(generics.ListAPIView):
-    serializer_class = ItemCardapioSerializer
-    permission_classes = [AllowAny]
-
-    def get_queryset(self):
-        from ..models.ItemCardapio import ItemCardapio
-        return ItemCardapio.objects.all()

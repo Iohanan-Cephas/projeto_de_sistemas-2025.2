@@ -14,7 +14,7 @@ from .views.Profile import MeuPerfilView
 from .views.Historico import HistoricoView
 from .views.Dashboard import AttendantsListView
 
-from SelfService.views.ApiViews import RegisterView, MesasLivresView, reservar_mesa, cancelar_reserva, Pedidos, CardapioItemsView
+from SelfService.views.ApiViews import RegisterView, MesasLivresView, reservar_mesa, cancelar_reserva
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views.Pagamento import fechar_conta
 from .views.Pagamento import fechar_conta, finalizar_conta
@@ -89,7 +89,4 @@ urlpatterns = [
          reservar_mesa, name="api_reservar_mesa"),
     path("api/mesas/<int:mesa_id>/cancelar/",
          cancelar_reserva, name="api_cancelar_reserva"),
-
-    path("api/pedidos/", Pedidos.as_view(), name="api_pedidos_mesa"),
-    path("api/cardapio/", CardapioItemsView.as_view(), name="api_cardapio"),
 ]

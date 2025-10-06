@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from .models import Mesa, Pedido
-from .models import ItemCardapio
+from .models import Mesa
 from django.contrib.auth.models import User
 
 
@@ -30,14 +29,3 @@ class RegisterSerializer(serializers.ModelSerializer):
             password=data["password"]
         )
         return user
-    
-class PedidosSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Pedido
-        fields = ["id", "criado_em", "atualizado_em", "mesa_id", "valor"]
-
-
-class ItemCardapioSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ItemCardapio
-        fields = ["id", "nome", "preco", "descricao"]

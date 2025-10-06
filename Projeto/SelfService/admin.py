@@ -45,5 +45,5 @@ class ItemPedidoInline(admin.TabularInline):
 
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'mesa', 'status', 'criado_em', 'atualizado_em', 'valor')
+    list_display = ('id', 'mesa', 'status', 'criado_em', 'atualizado_em')
     inlines = [ItemPedidoInline]
