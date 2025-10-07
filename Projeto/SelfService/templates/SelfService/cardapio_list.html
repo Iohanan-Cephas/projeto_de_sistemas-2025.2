@@ -2,90 +2,195 @@
 {% block title %}Cardápio{% endblock %}
 {% block header_title %}Cardápio{% endblock %}
 
+{% comment %} Adicionando um pouco de CSS customizado para o efeito Neumórfico/Soft UI {% endcomment %}
+{% block extra_head %}
+<style>
+  body {
+    background-color: #eef1f5; /* Um cinza muito claro para o fundo */
+  }
+  .card-soft {
+    background-color: #eef1f5;
+    border-radius: 20px;
+    border: none;
+    /* A "mágica" do Neumorfismo: uma sombra clara em cima/esquerda e uma escura em baixo/direita */
+    box-shadow: 8px 8px 15px #c1c8d1, -8px -8px 15px #ffffff;
+    transition: all 0.2s ease-in-out;
+  }
+  .card-soft:hover {
+    box-shadow: 5px 5px 10px #c1c8d1, -5px -5px 10px #ffffff;
+    transform: translateY(2px);
+  }
+  .search-soft {
+    background-color: #eef1f5 !important;
+    border: none !important;
+    border-radius: 15px !important;
+    /* Sombra interna para o campo de busca */
+    box-shadow: inset 5px 5px 10px #c1c8d1, inset -5px -5px 10px #ffffff;
+  }
+  .item-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    background-color: #eef1f5;
+    box-shadow: 5px 5px 10px #c1c8d1, -5px -5px 10px #ffffff;
+    color: var(--bs-primary);
+  }
+  .tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 50px;
+  }
+  .section-title {
+      font-weight: 700;
+      color: #343a40;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--bs-primary);
+      display: inline-block;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-xxl">
 
-  <!-- Título + ações -->
-  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-    <h2 class="h3 mb-0">Itens do cardápio</h2>
-
-    <div class="d-flex flex-wrap gap-2">
-      <div class="input-group">
-        <span class="input-group-text"><i class="bi bi-search"></i></span>
-        <input id="menuSearch" type="text" class="form-control" placeholder="Buscar por nome ou descrição">
-      </div>
-
-      {% if request.session.role == "GERENTE" %}
-        <a href="{% url 'cardapio_create' %}" class="btn btn-light">
-          <i class="bi bi-plus-lg me-2"></i>Novo item
-        </a>
-      {% endif %}
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-5">
+    <div>
+      <h2 class="fw-bolder mb-0">Nosso Cardápio</h2>
+      <p class="text-muted mb-0">Descubra sabores incríveis</p>
     </div>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div class="position-relative flex-grow-1 me-3">
+        
+        <i class="bi bi-search fs-5 position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary"></i>
+        
+        <input id="menuSearch" type="text" class="form-control form-control-lg rounded-pill ps-5" placeholder="Buscar...">
+
+    </div>
+    
+    {% if request.session.role == "GERENTE" %}
+        <a href="{% url 'cardapio_create' %}" class="btn btn-primary rounded-pill shadow-sm px-3 py-2">
+            <i class="bi bi-plus-lg me-1"></i>Novo item
+        </a>
+    {% endif %}
+
+</div>
   </div>
 
-  <!-- Tabela -->
-  <div class="card card-glass">
-    <div class="card-body p-0">
-      <div class="table-responsive">
-        <table class="table table-dark align-middle mb-0" id="menuTable">
-          <thead>
-            <tr class="text-secondary">
-              <th>Nome</th>
-              <th>Descrição</th>
-              <th class="text-nowrap">Preço</th>
-              {% if request.session.role == "GERENTE" %}
-                <th class="text-end">Ações</th>
-              {% endif %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for it in itens %}
-              <tr>
-                <td class="fw-semibold">{{ it.nome }}</td>
-                <td class="text-secondary">{{ it.descricao|default:"—" }}</td>
-                <td class="text-nowrap">R$ {{ it.preco|default_if_none:0|floatformat:2 }}</td>
+  <div id="menuItemsContainer">
+    {% if itens %}
+      <div class="mb-5 menu-section">
+        <h3 class="section-title"> Comidas</h3>
+        <div class="row g-4">
+          {% for it in itens %}
+            {% if "refrigerante" not in it.nome|lower and "suco" not in it.nome|lower and "bebida" not in it.nome|lower %}
+              <div class="col-lg-6 menu-item-card">
+                <div class="card card-soft p-3">
+                  <div class="d-flex align-items-center">
+                    <div class="me-4">
+                      <div class="item-icon"><i class="bi bi-egg-fried"></i></div>
+                    </div >
+                    <div class="flex-grow-1">
+                      <h5 class="fw-bold mb-0">{{ it.nome }}</h5>
+                      <p class="text-muted small mb-0">{{ it.descricao|default:"Delicioso e preparado na hora." }}</p>
+                    </div>
+                    <div class="text-end ms-3">
+                      <p class="h4 fw-bolder text-dark mb-2">R$ {{ it.preco|default_if_none:0|floatformat:2 }}</p>
+                      {% if request.session.role == "GERENTE" %}
+                        <div class="d-flex gap-2 justify-content-end">
+                          <a href="{% url 'cardapio_update' it.pk %}" class="btn btn-light btn-sm rounded-circle shadow-sm" style="width: 32px; height: 32px;"><i class="bi bi-pencil"></i></a>
+                          <a href="{% url 'cardapio_delete' it.pk %}" class="btn btn-danger btn-sm rounded-circle shadow-sm" style="width: 32px; height: 32px;" onclick="return confirm('Excluir {{ it.nome }}?');"><i class="bi bi-trash"></i></a>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>  
 
-                {% if request.session.role == "GERENTE" %}
-                  <td class="text-end">
-                    <a href="{% url 'cardapio_update' it.pk %}" class="btn btn-outline-light btn-sm">
-                      <i class="bi bi-pencil me-1"></i>Editar
-                    </a>
-                    <a href="{% url 'cardapio_delete' it.pk %}" class="btn btn-outline-danger btn-sm"
-                       onclick="return confirm('Excluir {{ it.nome }}? Esta ação não pode ser desfeita.');">
-                      <i class="bi bi-trash me-1"></i>Excluir
-                    </a>
-                  </td>
-                {% endif %}
-              </tr>
-            {% empty %}
-              <tr>
-                <td colspan="{% if request.session.role == 'GERENTE' %}4{% else %}3{% endif %}"
-                    class="text-center text-secondary py-4">
-                  Nenhum item cadastrado.
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <div class="menu-section">
+        <h3 class="section-title"> Bebidas</h3>
+        <div class="row g-4">
+          {% for it in itens %}
+            {% if "refrigerante" in it.nome|lower or "suco" in it.nome|lower or "bebida" in it.nome|lower %}
+              <div class="col-lg-6 menu-item-card">
+                <div class="card card-soft p-3">
+                  <div class="d-flex align-items-center">
+                    <div class="me-4">
+                      <div class="item-icon"><i class="bi bi-cup-straw"></i></div>
+                    </div>
+                    <div class="flex-grow-1">
+                      <h5 class="fw-bold mb-0">{{ it.nome }}</h5>
+                      <p class="text-muted small mb-0">{{ it.descricao|default:"Refrescante e na temperatura ideal." }}</p>
+                    </div>
+                    <div class="text-end ms-3">
+                      <p class="h4 fw-bolder text-dark mb-2">R$ {{ it.preco|default_if_none:0|floatformat:2 }}</p>
+                      {% if request.session.role == "GERENTE" %}
+                        <div class="d-flex gap-2 justify-content-end">
+                          <a href="{% url 'cardapio_update' it.pk %}" class="btn btn-light btn-sm rounded-circle shadow-sm" style="width: 32px; height: 32px;"><i class="bi bi-pencil"></i></a>
+                          <a href="{% url 'cardapio_delete' it.pk %}" class="btn btn-danger btn-sm rounded-circle shadow-sm" style="width: 32px; height: 32px;" onclick="return confirm('Excluir {{ it.nome }}?');"><i class="bi bi-trash"></i></a>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
       </div>
-    </div>
+
+    {% else %}
+      <div class="col-12">
+        <div class="card card-soft text-center p-5">
+          <h4 class="text-muted">Cardápio Vazio</h4>
+          <p class="text-muted">Parece que ainda não há nada por aqui. Que tal adicionar o primeiro item?</p>
+        </div>
+      </div>
+    {% endif %}
   </div>
 
 </div>
 
-<!-- Busca rápida (client-side) -->
 <script>
 (() => {
-  const input = document.getElementById('menuSearch');
-  const tbody = document.querySelector('#menuTable tbody');
-  if (!input || !tbody) return;
+   const input = document.getElementById('menuSearch');
+ const container = document.getElementById('menuItemsContainer');
 
-  input.addEventListener('input', () => {
-    const q = input.value.trim().toLowerCase();
-    [...tbody.rows].forEach(tr => {
-      tr.classList.toggle('d-none', !tr.innerText.toLowerCase().includes(q));
-    });
+// Seleciona os cards dos itens E as seções de categoria
+const items = container.querySelectorAll('.menu-item-card');
+const sections = container.querySelectorAll('.menu-section');
+
+if (!input || !items.length) return;
+ input.addEventListener('input', () => {
+ const query = input.value.trim().toLowerCase();
+
+ // Filtra os itens individualmente (como já fazia)
+ items.forEach(item => {
+ const itemText = item.innerText.toLowerCase();
+ // Esconde o item se o texto não corresponder à busca
+ item.classList.toggle('d-none', !itemText.includes(query));
+});
+
+ //Verifica cada seção de categoria
+ sections.forEach(section => {
+ // Conta quantos itens VISÍVEIS (.menu-item-card que NÃO têm a classe .d-none) existem nesta seção
+ const visibleItemsInSection = section.querySelectorAll('.menu-item-card:not(.d-none)');
+
+ // Se a contagem for 0, esconde a seção inteira (título + itens). Caso contrário, mostra.
+ section.classList.toggle('d-none', visibleItemsInSection.length === 0);
   });
+ });
 })();
 </script>
 {% endblock %}
