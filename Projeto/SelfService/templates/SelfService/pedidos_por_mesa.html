@@ -1,127 +1,152 @@
+
 {% extends "Base.html" %}
 {% block title %}Pedidos por mesa{% endblock %}
 {% block header_title %}Pedidos por mesa{% endblock %}
 
+
 {% block content %}
+
+
+<style>
+    .mesa-card {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        backdrop-filter: blur(10px); /* Efeito de vidro mais pronunciado */
+    }
+
+    .mesa-card:hover {
+        transform: translateY(-5px); /* Efeito de elevação ao passar o mouse */
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    }
+    /* Estilo para o acordeão no tema escuro */
+    .accordion-button {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        color: #fff !important;
+    }
+    .accordion-button:not(.collapsed) {
+        box-shadow: none;
+
+
+    }
+    .accordion-button:focus {
+        box-shadow: none;
+    }
+    .accordion-body {
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+</style>
+
 
 <div class="container-xxl">
 
-  <!-- Filtros -->
-  <div class="d-flex flex-wrap gap-2 mb-3">
-    <button type="button" class="btn btn-light btn-sm filter-btn active" data-filter="all">
-      Todas as mesas
-    </button>
-    <button type="button" class="btn btn-outline-light btn-sm filter-btn" data-filter="ocupada">
-      Ocupadas
-    </button>
-    <button type="button" class="btn btn-outline-light btn-sm filter-btn" data-filter="reservada">
-      Reservadas
-    </button>
-    <button type="button" class="btn btn-outline-light btn-sm filter-btn" data-filter="pedido">
-      Pedidos
-    </button>
-    <button type="button" class="btn btn-outline-light btn-sm filter-btn" data-filter="livre">
-      Livre
-    </button>
-  </div>
 
-  <!-- Lista de mesas -->
-  <div class="vstack gap-3">
-    {% for mp in mesas_pedidos %}
-    <div class="mesa-card card card-glass"
-         data-status="{% if mp.mesa.ocupada %}ocupada{% elif mp.mesa.reservada %}reservada{% else %}livre{% endif %}"
-         data-pedido="{% if mp.pedidos %}pedido{% else %}sem-pedido{% endif %}">
-      <div class="card-body">
+    <ul class="nav nav-pills gap-2 mb-4">
+        <li class="nav-item"><a href="#" class="nav-link active filter-btn" data-filter="all">Todas as mesas</a></li>
+        <li class="nav-item"><a href="#" class="nav-link filter-btn" data-filter="ocupada">Ocupadas</a></li>
+        <li class="nav-item"><a href="#" class="nav-link filter-btn" data-filter="reservada">Reservadas</a></li>
+        <li class="nav-item"><a href="#" class="nav-link filter-btn" data-filter="pedido">Com Pedidos</a></li>
+        <li class="nav-item"><a href="#" class="nav-link filter-btn" data-filter="livre">Livres</a></li>
+    </ul>
 
-        <!-- Cabeçalho da mesa -->
-        <div class="d-flex justify-content-between align-items-start mb-2">
-          <h3 class="h3 mb-0">Mesa {{ mp.mesa.numero }}</h3>
-          <div class="d-flex gap-2">
-            {% if mp.mesa.ocupada %}
-              <span class="badge text-bg-warning">ocupada</span>
-            {% endif %}
-            {% if mp.mesa.reservada %}
-              <span class="badge text-bg-info">reservada</span>
-            {% endif %}
-            {% if not mp.mesa.ocupada and not mp.mesa.reservada %}
-              <span class="badge text-bg-success">livre</span>
-            {% endif %}
-          </div>
-        </div>
 
-        <!-- Pedidos da mesa -->
-        {% if mp.pedidos %}
-          <ul class="list-group list-group-flush">
-            {% for p in mp.pedidos %}
-              <li class="list-group-item bg-transparent text-white">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="fw-semibold">Pedido #{{ p.id }}</div>
-                  <span class="badge
-                    {% if p.status == 'P' %}text-bg-warning
-                    {% elif p.status == 'E' %}text-bg-info
-                    {% elif p.status == 'C' %}text-bg-success
-                    {% else %}text-bg-primary{% endif %}">
-                    {{ p.get_status_display }}
-                  </span>
+    <div class="row g-4">
+        {% for mp in mesas_pedidos %}
+        <div class="col-12 col-md-6 col-lg-4 mesa-card-wrapper"
+             data-status="{% if mp.mesa.ocupada %}ocupada{% elif mp.mesa.reservada %}reservada{% else %}livre{% endif %}"
+             data-pedido="{% if mp.pedidos %}pedido{% else %}sem-pedido{% endif %}">
+           
+            <div class="card h-100 shadow-sm mesa-card card-glass">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h3 class="h3 mb-0">Mesa {{ mp.mesa.numero }}</h3>
+                        <div>
+                          {% if mp.mesa.ocupada %}<span class="badge text-bg-warning">Ocupada</span>{% endif %}
+                          {% if not mp.mesa.ocupada and not mp.mesa.reservada %}<span class="badge text-bg-success">Livre</span>{% endif %}
+                        </div>
+                    </div>
+
+
+                    {% if mp.pedidos %}
+                    <div class="accordion accordion-flush" id="accordionMesa{{ mp.mesa.id }}">
+                        {% for p in mp.pedidos %}
+                        <div class="accordion-item bg-transparent">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed rounded-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePedido{{ p.id }}">
+                                    <span class="fw-semibold me-2">Pedido #{{ p.id }}</span>
+                                    <span class="badge ms-auto
+                                        {% if p.status == 'P' %}text-bg-warning
+                                        {% elif p.status == 'E' %}text-bg-info
+                                        {% elif p.status == 'C' %}text-bg-success
+                                        {% else %}text-bg-primary{% endif %}">
+                                        {{ p.get_status_display }}
+                                    </span>
+                                </button>
+                            </h2>
+                            <div id="collapsePedido{{ p.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionMesa{{ mp.mesa.id }}">
+                                <div class="accordion-body">
+                                    <div class="text-secondary small mb-2">Criado em {{ p.criado_em|date:"d/m/Y, H:i" }}</div>
+                                    <ul class="small ps-4 text-white">
+                                        {% for ip in p.itens_pedido.all %}
+                                        <li>
+                                            {{ ip.quantidade }}× {{ ip.item.nome }} — R$ {{ ip.item.preco|floatformat:2 }}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                        <p class="text-secondary mb-0 mt-3"><i class="bi bi-circle-slash me-2"></i>Sem pedidos nesta mesa.</p>
+                    {% endif %}
                 </div>
-                <div class="text-secondary small">Criado em {{ p.criado_em|date:"d/m/Y, H:i" }}</div>
-
-                {% with itens=p.itens_pedido.all %}
-                  {% if itens %}
-                    <ul class="mt-2 small ps-4">
-                      {% for ip in itens %}
-                        <li>
-                          {{ ip.quantidade }}× {{ ip.item.nome }} — R$ {{ ip.item.preco|default_if_none:0|floatformat:2 }}
-                        </li>
-                      {% endfor %}
-                    </ul>
-                  {% endif %}
-                {% endwith %}
-              </li>
-            {% endfor %}
-          </ul>
-        {% else %}
-          <p class="text-secondary mb-0">Sem pedidos.</p>
-        {% endif %}
-
-      </div>
+            </div>
+        </div>
+        {% empty %}
+            <div class="col-12 text-center text-secondary">
+                <h4>Nenhuma mesa encontrada.</h4>
+            </div>
+        {% endfor %}
     </div>
-    {% empty %}
-      <div class="text-secondary">Nenhuma mesa encontrada.</div>
-    {% endfor %}
-  </div>
 </div>
 
-<!-- Filtro (JS simples) -->
+
 <script>
 (function(){
-  const btns = document.querySelectorAll('.filter-btn');
-  const cards = document.querySelectorAll('.mesa-card');
+    const btns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.mesa-card-wrapper');
 
-  function apply(filter){
-    cards.forEach(card => {
-      const st = card.dataset.status;     // ocupada | reservada | livre
-      const pd = card.dataset.pedido;     // pedido | sem-pedido
 
-      let show = false;
-      if (filter === 'all') show = true;
-      else if (filter === 'pedido') show = (pd === 'pedido');
-      else show = (st === filter);
+    function apply(filter) {
+        cards.forEach(card => {
+            const st = card.dataset.status;
+            const pd = card.dataset.pedido;
 
-      card.classList.toggle('d-none', !show);
+
+            let show = false;
+            if (filter === 'all') show = true;
+            else if (filter === 'pedido') show = (pd === 'pedido');
+            else show = (st === filter);
+
+
+            card.classList.toggle('d-none', !show);
+        });
+    }
+
+
+    btns.forEach(b => {
+        b.addEventListener('click', (e) => {
+            e.preventDefault(); // Impede o link de navegar
+            btns.forEach(x => x.classList.remove('active'));
+            b.classList.add('active');
+            apply(b.dataset.filter);
+        });
     });
-  }
-
-  btns.forEach(b=>{
-    b.addEventListener('click', ()=>{
-      btns.forEach(x=>x.classList.remove('active','btn-light'));
-      btns.forEach(x=>x.classList.add('btn-outline-light'));
-      b.classList.remove('btn-outline-light');
-      b.classList.add('btn-light','active');
-      apply(b.dataset.filter);
-    });
-  });
 })();
 </script>
 
+
 {% endblock %}
+
+
